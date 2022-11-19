@@ -1,0 +1,18 @@
+.header__line {
+  margin: 0;
+  padding: 0;
+  margin-top: 41px;
+}
+
+.header__line::after {
+  content: '';
+  top: 74px;
+  left: 0px;
+  position: absolute;
+  max-width: 880px;
+  width: 880px;
+  height: 2px;
+  background-color: #545454; 
+  opacity: 0.7;
+  z-index: 5;
+}

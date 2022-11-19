@@ -1,0 +1,7 @@
+.header__content {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 880px;
+  align-items: flex-start;
+}
