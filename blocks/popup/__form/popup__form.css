@@ -1,0 +1,21 @@
+.popup__form {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 32px auto 37px auto;
+  max-width: 358px;
+  font-family: 'Inter', 'Arial', sans-serif;
+}
+
+@media screen and (max-width: 980px) {
+  .popup__form {
+    width: calc(238px + 120*(100vw - 320px)/(1280 - 320));
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .popup__form {
+    width: 238px;
+  }
+}

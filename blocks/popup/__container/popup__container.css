@@ -1,0 +1,28 @@
+.popup__container {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+  flex-grow: 0;
+  background-color: white;
+  width: 430px;
+  height: 330px;
+  overflow: visible;
+  opacity: 1;
+  z-index: 100;
+  border-radius: 10px;
+}
+
+
+@media screen and (max-width: 980px) {
+  .popup__container {
+    width: calc(100vw*(320/430));
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .popup__container {
+    width: 282px;
+    height: 322px;
+  }
+}

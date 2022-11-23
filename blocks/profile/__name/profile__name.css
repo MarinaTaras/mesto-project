@@ -1,4 +1,22 @@
 .profile__name {
   margin: 0;
   padding: 0;
+  font-size: 42px;
+  line-height: 48px;
+  font-weight: medium;
+  text-align: center;
+}
+
+
+@media screen and (max-width: 980px) {
+  .profile__name {
+    font-size: calc(27px + 15*(100vw - 320px)/(1280 - 320));
+    line-height: auto;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .profile__name {
+    font-size: 27px;
+  }
 }

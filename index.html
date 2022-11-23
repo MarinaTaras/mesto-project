@@ -8,49 +8,126 @@
 </head>
 <body>
   <div class="page">
-    <header class="header">
-      <div class="header__content">
-        <img class="header__logo" src="./images/Vector.png" alt="Mesto logo">
-        <span class="header__line"></span>
-      </div>
-    </header>
+    <div class="wrapper">
+      <header class="header">
+        <div class="header__content">
+          <img class="header__logo" src="./images/Vector.png" alt="Mesto logo">
+       </div>
+      </header>
 
-    <main class="content">
-      <section class="profile">
-        <img class="profile__avatar" src="./images/image.jpg" alt="Аватар">
-        <div class="profile__info">
-          <p class="profile__name">Жак-Ив Кусто</p>
-          <button class="profile__button">
-            <img class="profile__plus" src="./images/Vector.svg" alt="Плюсик">
-          </button>
-          <p class="profile__profession">Исследователь океана</p>
-        </div>
-      </section>
-
-      <section class="elements">
-        <article class="element">
-          <div class="element_rectangl">
-            <div class="element__mask">
-               <img class="element__image" src="./images/kirill-pershin-1088404-unsplash.jpg" alt="Карачаевск">
+      <main class="content">
+        <section class="profile">
+          <img class="profile__avatar" src="./images/image.jpg" alt="Аватар">
+          <div class="profile__info">
+            <div class="profile__edit-name">
+              <p class="profile__name">Жак-Ив Кусто</p>
+              <button class="profile__infobutton button_hover">
+                <img src="./images/Vector_info.svg" alt="Кнопочка">
+              </button>
             </div>
-            <div class="element__group">
-              <p class="element__text">Карачаевск</p>
-              <img class="element__like" src="./images/Group.svg" alt="Сердечко">
-            </div>
+            <p class="profile__profession">Исследователь океана</p>
           </div>
-        </article>
-      </section>
+          <button class="profile__addbutton button_hover">
+            <img class="profile__plus" src="./images/Vector_add.svg" alt="Плюсик">
+          </button>
+        </section>  
+        
+        <section class="elements">
+          <article class="element">
+            <div class="element__rectangl">
+              <div class="element__mask">
+                <img class="element__image" src="./images/Karachaevsk.jpg" alt="Карачаевск">
+              </div>
+              <div class="element__group">
+                <p class="element__text">Карачаевск</p>
+                <div class="element__like"></div>
+              </div>
+            </div>
+          </article>
+          <article class="element">
+            <div class="element__rectangl">
+              <div class="element__mask">
+                <img class="element__image" src="./images/Elbrus.jpg" alt="Elbrus">
+              </div>
+              <div class="element__group">
+                <p class="element__text">Гора Эльбрус</p>
+                <div class="element__like"></div>
+              </div>
+            </div>
+          </article>
+          <article class="element">
+            <div class="element__rectangl">
+              <div class="element__mask">
+                <img class="element__image" src="./images/Dombay.jpg" alt="Dombay">
+              </div>
+              <div class="element__group">
+                <p class="element__text">Домбай</p>
+                <div class="element__like"></div>
+              </div>
+            </div>
+          </article>
+          <article class="element">
+            <div class="element__rectangl">
+              <div class="element__mask">
+                <img class="element__image" src="./images/Elbrus.jpg" alt="Elbrus">
+              </div>
+              <div class="element__group">
+                <p class="element__text">Гора Эльбрус</p>
+                <div class="element__like"></div>
+              </div>
+            </div>
+          </article>
+          <article class="element">
+            <div class="element__rectangl">
+              <div class="element__mask">
+                <img class="element__image" src="./images/Dombay.jpg" alt="Dombay">
+              </div>
+              <div class="element__group">
+                <p class="element__text">Домбай</p>
+                <div class="element__like"></div>
+              </div>
+            </div>
+          </article>
+          <article class="element">
+            <div class="element__rectangl">
+              <div class="element__mask">
+                <img class="element__image" src="./images/Karachaevsk.jpg" alt="Карачаевск">
+              </div>
+              <div class="element__group">
+                <p class="element__text">Карачаевск</p>
+                <div class="element__like"></div>
+              </div>
+            </div>
+          </article>
+        </section>
+      
+      </main>
 
       <footer class="footer">
         <div class="footer__text">&#169;2020 Mesto Russia</div>
       </footer>
-      
-    </main>
 
-    <footer class="footer">
-    
-            
-    </footer>
+    </div>
   </div>  
+
+  <div class="popup popup_opened">
+    <div class="popup__wrap">
+       
+      <div class="popup__container">
+        <button class="popup__close button_hover">    <!--data-hystclose -->
+          <img class="popup__close-icon" src="./images/Close Icon.svg" alt="close">
+        </button>
+        <form class="popup__form" name="profile">
+            <h2 class="popup__title">Редактировать профиль</h2>
+            <fieldset class="popup__fieldset">
+              <input class="popup__item" value="Жак-Ив Кусто" type="text" name="profile-name">
+              <input class="popup__item" value="Исследователь океана" type="text" name="profile-profession">
+            </fieldset>
+            <button class="popup__button button_hover">Сохранить</button>
+        </form> 
+      </div>
+    </div>
+    <div class="popup__overley"></div>
+  </div>
 </body>
 </html>

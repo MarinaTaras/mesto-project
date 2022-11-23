@@ -1,4 +1,19 @@
 .content {
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 880px;
+}
+
+@media screen and (max-width: 980px) {
+  .content {
+    max-width: calc(100vw*(880/1280));
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .content {
+    max-width: 282px;
+  }
 }

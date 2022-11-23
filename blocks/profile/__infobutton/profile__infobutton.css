@@ -1,0 +1,23 @@
+.profile__infobutton {
+  margin: 0;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  border: solid 1px white;
+  background-color: black;
+  align-self: center;
+}
+
+@media screen and (max-width: 980px) {
+  .profile__infobutton {
+    width: calc(18px + 6*(100vw - 320px)/(1280 - 320));
+    height: calc(18px + 6*(100vw - 320px)/(1280 - 320));
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .profile__infobutton {
+    width: 18px;
+    height: 18px;
+  }
+}
