@@ -1,15 +1,9 @@
 .wrapper {
-  margin: 0 auto;
   padding: 45px 0 60px 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   max-width: 1280px;
 }
 
-@media screen and (max-width: 980px) {
-  .wrapper {
-    width: 100vw;
-  }
-}
+
 

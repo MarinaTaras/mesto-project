@@ -2,9 +2,15 @@
   max-width: 150px;
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 980px) {
   .header__logo {
     margin-left: 27px;
+    width: calc(104px + 46*(100vw - 320px)/(1280 - 320));
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .header__logo {
     width: 104px;
   }
 }

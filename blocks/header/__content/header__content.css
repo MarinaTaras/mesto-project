@@ -3,19 +3,13 @@
   padding: 0;
   display: flex;
   width: 880px;
+  max-width: 100%;
   border-bottom: 1px solid rgba(84, 84, 84, 0.7);
   padding-bottom: 40px;
 }
 
 @media screen and (max-width: 980px) {
   .header__content {
-    width: calc(100vw*(880/1280));
     padding-bottom: 30px;
-  }
-}
-
-@media screen and (max-width: 320px) {
-  .header__content {
-    width: 320px;
   }
 }
