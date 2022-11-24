@@ -1,10 +1,13 @@
 .profile__infobutton {
+  position: absolute;
+  right: -42px;
+  top: 16px;
   margin: 0;
   padding: 0;
   width: 24px;
   height: 24px;
   border: solid 1px white;
-  background-color: black;
+  background-color: transparent;
   align-self: center;
 }
 
@@ -19,5 +22,7 @@
   .profile__infobutton {
     width: 18px;
     height: 18px;
+    right: -34px;
+    top: 16px;
   }
 }

@@ -1,26 +1,15 @@
 .profile__info {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  position: relative;
   padding: 0;
   padding-left: 30px;
   margin: 0;
-  max-width: 336px;
-  width: 100%;
 }
 
 @media screen and (max-width: 980px) {
   .profile__info {
-    margin-top: 42px;
+    margin-top: 26px;
     padding: 0;
     justify-content: center;
-    max-width: calc(100vw*(282/320));
-    gap: 14px;
-  }
-}
-
-@media screen and (max-width: 320px) {
-  .profile__info {
-    max-width: 282px;
   }
 }

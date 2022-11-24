@@ -7,7 +7,6 @@
   bottom: 0;
   right: 0;
   left: 0;
-  overflow: hidden;
   pointer-events: none;
   z-index: 90;
   opacity: 0.5;

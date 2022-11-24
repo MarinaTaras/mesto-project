@@ -4,19 +4,20 @@
   margin-top: 50px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(282px, 1fr));
-  width: 880px;
+  max-width: 880px;
   row-gap: 20px;
   column-gap: 17px;
 }
 
 @media screen and (max-width: 980px) {
   .elements {
-    width: calc(100vw*(880/1280));
+    max-width: calc(282px + 598*(100vw - 320px)/(1280 - 320));
   }
 }
 
 @media screen and (max-width: 320px) {
   .elements {
     max-width: 282px;
+    margin-top: 36px;
   }
 }

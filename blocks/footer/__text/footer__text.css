@@ -1,11 +1,12 @@
 .footer__text {
   font-size: 18px;
-  line-height: auto;
+  line-height: 22px;
   color: #545454;
 }
 
 @media screen and (max-width: 980px) {
   .footer__text {
     font-size: calc(14px + 4*(100vw - 320px)/(1280 - 320));
+    line-height: 17px;
   }
 }

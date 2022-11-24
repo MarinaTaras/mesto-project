@@ -4,6 +4,7 @@
   display: flex;
   color: black;
   max-width: 246px;
+  height: 79px;
   width: 100%;
   justify-content: space-between;
   align-items: center;

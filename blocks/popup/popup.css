@@ -5,8 +5,6 @@
   bottom: 0;
   right: 0;
   left: 0;
-  overflow: hidden;
-  overflow-y: auto;
   flex-flow: column nowrap;
   justify-content: center; 
   align-items: center;
