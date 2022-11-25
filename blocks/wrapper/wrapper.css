@@ -7,5 +7,9 @@
   align-items: center;
 }
 
-
+@media screen and (max-width: 980px) {
+  .wrapper {
+    padding: 28px 0 36px 0;
+  }
+}
 

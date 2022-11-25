@@ -1,5 +1,6 @@
 .profile__info {
   display: flex;
+  flex-direction: column;
   position: relative;
   padding: 0;
   padding-left: 30px;
@@ -10,6 +11,6 @@
   .profile__info {
     margin-top: 26px;
     padding: 0;
-    justify-content: center;
+    align-items: center;
   }
 }

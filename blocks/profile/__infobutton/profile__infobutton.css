@@ -26,3 +26,8 @@
     top: 10px;
   }
 }
+
+.profile__infobutton:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}

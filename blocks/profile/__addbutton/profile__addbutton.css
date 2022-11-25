@@ -22,3 +22,8 @@
     width: 282px;
   }
 }
+
+.profile__addbutton:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}

@@ -22,3 +22,8 @@
     height: calc(20px + 12*(100vw - 320px)/(1280 - 320));
   }
 }
+
+.popup__close:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}

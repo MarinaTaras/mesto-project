@@ -1,6 +1,8 @@
 .popup__button {
+  padding: 0;
+  margin: 0;
   margin-top: 46px;
-  width: 100%;
+  width: 358px;
   height: 50px;
   background-color: black;
   color: white;
@@ -16,5 +18,17 @@
     height: 46px;
     font-size: calc(14px + 4*(100vw - 320px)/(1280 - 320));
     line-height: 17px;
+    max-width: calc(238px + 120*(100vw - 320px)/(1280 - 320));
   }
+}
+
+@media screen and (max-width: 320px) {
+  .popup__button {
+    max-width: 238px;
+  }
+}
+
+.popup__button:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }
