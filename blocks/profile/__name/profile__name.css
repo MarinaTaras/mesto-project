@@ -17,6 +17,8 @@
     line-height: 33px;
     text-align: center;
     max-width: calc(189px + 105*(100vw - 320px)/(1280 - 320));
+    align-self: center;
+    position: relative;
   }
 }
 
@@ -24,5 +26,6 @@
   .profile__name {
     font-size: 27px;
     max-width: 189px;
+    position: initial;
   }
 }
