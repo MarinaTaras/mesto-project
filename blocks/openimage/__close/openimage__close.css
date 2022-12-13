@@ -1,0 +1,29 @@
+.openimage__close {
+  display: flex;
+  position: absolute;
+  right: -39px;
+  top: -39px;
+  margin: 0;
+  padding: 0;
+  width: 32px;
+  color: white;
+  background: none;
+  z-index: 99;
+  border: none;
+  opacity: 1;
+}
+
+
+@media screen and (max-width: 980px) {
+  .openimage__close {
+    right: 0px;
+    top: -36px;
+    width: calc(20px + 12*(100vw - 320px)/(1280 - 320));
+    height: calc(20px + 12*(100vw - 320px)/(1280 - 320));
+  }
+}
+
+.openimage__close:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}

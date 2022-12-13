@@ -1,0 +1,11 @@
+.mesto__close-icon {
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 980px) {
+  .mesto__close-icon {
+    width: calc(20px + 12*(100vw - 320px)/(1280 - 320));
+    height: calc(20px + 12*(100vw - 320px)/(1280 - 320));
+  }
+}

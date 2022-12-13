@@ -21,85 +21,18 @@
           <div class="profile__info">
             <div class="profile__edit-name">
               <h1 class="profile__name">Жак-Ив Кустo</h1>
-              <button class="profile__infobutton" type="button">
+              <button class="profile__infobutton" type="button" id="infobutton">
                 <img src="./images/Vector_info.svg" alt="Кнопочка">
               </button>
             </div>
             <p class="profile__profession">Исследователь океана</p>  
           </div>
-          <button class="profile__addbutton" type="button">
+          <button class="profile__addbutton" type="button" id="addbutton">
             <img class="profile__plus" src="./images/Vector_add.svg" alt="Плюсик">
           </button>
         </section>  
         
-        <section class="elements">
-          <article class="element">
-            <div class="element__rectangl">
-              <div class="element__mask">
-                <img class="element__image" src="./images/Karachaevsk.jpg" alt="Карачаевск">
-              </div>
-              <div class="element__group">
-                <h2 class="element__text">Карачаевск</h2>
-                <button class="element__like" type="button"></button>
-              </div>
-            </div>
-          </article>
-          <article class="element">
-            <div class="element__rectangl">
-              <div class="element__mask">
-                <img class="element__image" src="./images/Elbrus.jpg" alt="Elbrus">
-              </div>
-              <div class="element__group">
-                <h2 class="element__text">Гора Эльбрус</h2>
-                <button class="element__like" type="button"></button>
-              </div>
-            </div>
-          </article>
-          <article class="element">
-            <div class="element__rectangl">
-              <div class="element__mask">
-                <img class="element__image" src="./images/Dombay.jpg" alt="Dombay">
-              </div>
-              <div class="element__group">
-                <h2 class="element__text">Домбай</h2>
-                <button class="element__like" type="button"></button>
-              </div>
-            </div>
-          </article>
-          <article class="element">
-            <div class="element__rectangl">
-              <div class="element__mask">
-                <img class="element__image" src="./images/Elbrus.jpg" alt="Elbrus">
-              </div>
-              <div class="element__group">
-                <h2 class="element__text">Гора Эльбрус</h2>
-                <button class="element__like" type="button"></button>
-              </div>
-            </div>
-          </article>
-          <article class="element">
-            <div class="element__rectangl">
-              <div class="element__mask">
-                <img class="element__image" src="./images/Dombay.jpg" alt="Dombay">
-              </div>
-              <div class="element__group">
-                <h2 class="element__text">Домбай</h2>
-                <button class="element__like" type="button"></button>
-              </div>
-            </div>
-          </article>
-          <article class="element">
-            <div class="element__rectangl">
-              <div class="element__mask">
-                <img class="element__image" src="./images/Karachaevsk.jpg" alt="Карачаевск">
-              </div>
-              <div class="element__group">
-                <h2 class="element__text">Карачаевск</h2>
-                <button class="element__like" type="button"></button>
-              </div>
-            </div>
-          </article>
-        </section>
+        <section class="elements"></section>
       
       </main>
 
@@ -110,24 +43,60 @@
     </div>
   </div>  
 
-  <div class="popup">
+  <div class="popup" id="mainpopup">
     <div class="popup__wrap">
        
       <div class="popup__container">
-        <button class="popup__close" type="button">    
+        <button class="popup__close" type="button" id="closebutton">    
           <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close">
         </button>
-        <form class="popup__form" name="profile">
+        <form class="popup__form" name="profile" id="popupform" >
             <h2 class="popup__title">Редактировать профиль</h2>
             <fieldset class="popup__fieldset">
-              <input class="popup__item" value="Жак-Ив Кусто" type="text" name="profile-name">
-              <input class="popup__item" value="Исследователь океана" type="text" name="profile-profession">
+              <input class="popup__item" placeholder="Жак-Ив Кусто" type="text" name="profile-name">
+              <input class="popup__item" placeholder="Исследователь океана" type="text" name="profile-profession">
             </fieldset>
             <button class="popup__button" type="submit">Сохранить</button>
         </form> 
       </div>
     </div>
-    <div class="popup__overley"></div>
+    <div class="popup__overley" id="overley"></div>
   </div>
+  
+  <div class="mesto">
+    <div class="mesto__wrap">
+       
+      <div class="mesto__container">
+        <button class="mesto__close" type="button" id="closemestobutton">    
+          <img class="mesto__close-icon" src="./images/Close_Icon.svg" alt="close">
+        </button>
+        <form class="mesto__form" name="mestoprofile" id="mestoform" >
+            <h2 class="mesto__title">Новое место</h2>
+            <fieldset class="mesto__fieldset">
+              <input class="mesto__item" placeholder="Название" type="text" name="mesto-name">
+              <input class="mesto__item" placeholder="Ссылка на картинку" type="text" name="mesto-profession">
+            </fieldset>
+            <button class="mesto__button" type="submit">Сохранить</button>
+        </form> 
+      </div>
+    </div>
+    <div class="mesto__overley" id="mestooverley"></div>
+  </div>
+
+  <div class="openimage">
+    <div class="openimage__container">
+      <button type="button" class="openimage__close" id="imagebutton">
+        <img class="openimage__close-icon" src="./images/Close_Icon.svg" alt="close">
+      </button>
+      <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="ddd" class="openimage__bigimage">
+      <h2 class="openimage__text">image</h2>
+    </div>
+    
+  </div>
+
 </body>
+<!-- подключаем файл JS скриптов -->
+<script src="cards.js"></script>
+<script src="script.js"></script>
+
 </html>

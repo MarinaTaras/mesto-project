@@ -9,6 +9,7 @@
   border: 0;
   background-color: transparent;
   background-position: center;
+  z-index: 5;
 }
 
 .element__like:hover {
@@ -16,6 +17,6 @@
   opacity: 0.5;
 }
 
-.element__like:active {
+.element__like_active {
   background-image: url('../../../images/black_like.svg');
 }

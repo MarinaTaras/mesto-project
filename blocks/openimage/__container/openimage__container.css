@@ -1,0 +1,5 @@
+.openimage__container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+}
