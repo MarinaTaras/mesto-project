@@ -1,0 +1,5 @@
+.popup__container_image {
+  /* flex-direction: column; */
+  background-color: black;
+  border-radius: unset;
+}

@@ -1,4 +1,4 @@
-.openimage__text {
+.popup__text {
   font-family: 'inter';
   font-size: 12px;
   line-height: 15px;
@@ -7,4 +7,5 @@
   padding: 0;
   padding-top: 10px;
   color: white;
+  align-self: start;
 }

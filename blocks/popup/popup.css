@@ -9,8 +9,11 @@
   justify-content: center; 
   align-items: center;
   margin: auto;
-  z-index: 99;
   width: 100%;
   min-height: 100%;
+  border: none;
+  pointer-events: all;
+  background-color: rgba(0, 0, 0, 0.5);
+
 }
 
