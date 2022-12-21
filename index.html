@@ -1,98 +1,153 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Место</title>
-  <link rel="stylesheet" href="./pages/index.css">
-</head>
-<body>
-  <div class="page">
-    <div class="wrapper">
-      <header class="header">
-        <div class="header__content">
-          <img class="header__logo" src="./images/header_logo.svg" alt="Mesto logo">
-       </div>
-      </header>
-
-      <main class="content">
-        <section class="profile">
-          <img class="profile__avatar" src="./images/image.jpg" alt="Аватар">
-          <div class="profile__info">
-            <div class="profile__edit-name">
-              <h1 class="profile__name">Жак-Ив Кустo</h1>
-              <button class="profile__infobutton p__button" type="button" data-target="profile" id="infobutton">
-                <img src="./images/Vector_info.svg" alt="Кнопочка">
-              </button>
-            </div>
-            <p class="profile__profession">Исследователь океана</p>  
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <title>Место</title>
+    <link rel="stylesheet" href="./pages/index.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="wrapper">
+        <header class="header">
+          <div class="header__content">
+            <img class="header__logo" src="./images/header_logo.svg" alt="Mesto logo" />
           </div>
-          <button class="profile__addbutton p__button" type="button" data-target="mesto" id="addbutton">
-            <img class="profile__plus" src="./images/Vector_add.svg" alt="Плюсик">
-          </button>
-        </section>  
-        
-        <section class="elements"></section>
-      
-      </main>
+        </header>
 
-      <footer class="footer">
-        <p class="footer__text">&#169;2020 Mesto Russia</p>
-      </footer>
+        <main class="content">
+          <section class="profile">
+            <img class="profile__avatar" src="./images/image.jpg" alt="Аватар" />
+            <div class="profile__info">
+              <div class="profile__edit-name">
+                <h1 class="profile__name">Жак-Ив Кустo</h1>
+                <button
+                  class="profile__infobutton p__button"
+                  type="button"
+                  data-target="profile"
+                  id="infobutton"
+                >
+                  <img src="./images/Vector_info.svg" alt="Кнопочка" />
+                </button>
+              </div>
+              <p class="profile__profession">Исследователь океана</p>
+            </div>
+            <button
+              class="profile__addbutton p__button"
+              type="button"
+              data-target="mesto"
+              id="addbutton"
+            >
+              <img class="profile__plus" src="./images/Vector_add.svg" alt="Плюсик" />
+            </button>
+          </section>
 
+          <section class="elements"></section>
+        </main>
+
+        <footer class="footer">
+          <p class="footer__text">&#169;2020 Mesto Russia</p>
+        </footer>
+      </div>
     </div>
-  </div>  
 
-  <div class="popup popup__profile overlay" id="profile">
-    <div class="popup__wrap">
-      <div class="popup__container">
-        <button class="popup__close close" type="button" id="closebutton">    
-          <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close">
-        </button>
-        <form class="popup__form" name="profile" id="profileform" >
+    <div class="popup popup__profile overlay" id="profile">
+      <div class="popup__wrap">
+        <div class="popup__container">
+          <button class="popup__close close" type="button" id="closebutton">
+            <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close" />
+          </button>
+          <form class="popup__form" name="profile" id="profileform">
             <h2 class="popup__title">Редактировать профиль</h2>
             <fieldset class="popup__fieldset">
-              <input class="popup__item" id="firstitem" placeholder="Жак-Ив Кусто" type="text" name="profile-name">
-              <input class="popup__item" id="seconditem" placeholder="Исследователь океана" type="text" name="profile-profession">
+              <input
+                class="popup__item"
+                id="firstitem"
+                placeholder="Жак-Ив Кусто"
+                type="text"
+                name="profile-name"
+              />
+              <input
+                class="popup__item"
+                id="seconditem"
+                placeholder="Исследователь океана"
+                type="text"
+                name="profile-profession"
+              />
             </fieldset>
             <button class="popup__button close" type="submit">Сохранить</button>
-        </form> 
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  
-  <div class="popup popup__mesto overlay" id="mesto">
-    <div class="popup__wrap">
-      <div class="popup__container">
-        <button class="popup__close close" type="button" id="closebutton">    
-          <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close">
-        </button>
-        <form class="popup__form" name="mesto-form" id="mestoform" >
+
+    <div class="popup popup__mesto overlay" id="mesto">
+      <div class="popup__wrap">
+        <div class="popup__container">
+          <button class="popup__close close" type="button" id="closebutton">
+            <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close" />
+          </button>
+          <form class="popup__form" name="mesto-form" id="mestoform">
             <h2 class="popup__title">Новое место</h2>
             <fieldset class="popup__fieldset">
-              <input class="popup__item" id="firstitem" placeholder="Название" type="text" name="mesto-name">
-              <input class="popup__item" id="seconditem" placeholder="Ссылка на картинку" type="text" name="mesto-link">
+              <input
+                class="popup__item"
+                id="firstitem"
+                placeholder="Название"
+                type="text"
+                name="mesto-name"
+              />
+              <input
+                class="popup__item"
+                id="seconditem"
+                placeholder="Ссылка на картинку"
+                type="text"
+                name="mesto-link"
+              />
             </fieldset>
             <button class="popup__button close" type="submit">Сохранить</button>
-        </form> 
+          </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="popup popup__image overlay" id="bigimage">
-    <div class="popup__container popup__container_image">
-      <button type="button" class="popup__close close" id="closebutton">
-        <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close">
-      </button>
-      <img class="popup__bigimage" src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg" alt="ddd" >
-      <h2 class="popup__text">image</h2>
+    <div class="popup popup__image overlay" id="bigimage">
+      <div class="popup__container popup__container_image">
+        <button type="button" class="popup__close close" id="closebutton">
+          <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close" />
+        </button>
+        <img
+          class="popup__bigimage"
+          src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg"
+          alt="ddd"
+        />
+        <h2 class="popup__text">image</h2>
+      </div>
     </div>
-    
-  </div>
 
-</body>
-<!-- подключаем файл JS скриптов -->
-<script src="./scripts/cards.js"></script>
-<script src="./scripts/script.js"></script>
-
+    <template class="template__element" id="templ-element">
+      <div class="element">
+        <div class="element__rectangl">
+          <div class="element__mask">
+            <img
+              class="element__image"
+              src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg"
+              alt="image"
+            />
+            <button class="element__trash" type="button"></button>
+          </div>
+          <div class="element__group">
+            <h2 class="element__text">Архыз</h2>
+            <button class="element__like" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </body>
+  <!-- подключаем файл JS скриптов -->
+  <script src="./scripts/cards.js"></script>
+  <script src="./scripts/script.js"></script>
 </html>

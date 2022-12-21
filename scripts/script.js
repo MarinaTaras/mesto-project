@@ -1,9 +1,11 @@
 const popupImage = document.querySelector('.popup__image')
 const profileName = document.querySelector('.profile__name')
 const profileProfession = document.querySelector('.profile__profession')
+const bigimagePopup = document.getElementById('bigimage')
+
 let profileForm
 
-// блоr profile
+// блок profile
 const infoButton = document.querySelector('#infobutton')
 
 //блок место
@@ -40,23 +42,15 @@ popupButton.forEach((pButton) => {
   }
 
   pButton.addEventListener('click', (e) => {
-    getImageData(e.target)
     getProfileData(popup)
     openPopup(popup)
   })
 
   // закрыть попап
-  const close = popup.querySelectorAll('.close')
-  close.forEach((c) => c.addEventListener('click', () => closePopup(popup)))
-
+  closeByIcon(popup)
+  
   //для оверлей
-  if (popup.className.includes('overlay')) {
-    popup.addEventListener('click', (e) => {
-      if (e.target === popup) {
-        closePopup(popup)
-      }
-    })
-  }
+  closeByOverlay(popup)
 
   //ищем форму
   const profileForm = popup.querySelector('#profileform')
@@ -72,7 +66,7 @@ popupButton.forEach((pButton) => {
 })
 
 /**
- * Закрытие окна
+ *  Варианты закрытия окна
  */
 
 function closePopup(popup) {
@@ -82,10 +76,24 @@ function closePopup(popup) {
   popup.classList.remove('popup_op')
 }
 
+function closeByOverlay(popup) {
+  if (popup.className.includes('overlay')) {
+    popup.addEventListener('click', (e) => {
+      if (e.target === popup) {
+        closePopup(popup)
+      }
+    })
+  }
+}
+
+function closeByIcon(popup) {
+  const close = popup.querySelectorAll('.close')
+  close.forEach((c) => c.addEventListener('click', () => closePopup(popup)))
+}
+
 /**
  * Открытие окна
  */
-
 function openPopup(popup) {
   setTimeout(() => {
     popup.classList.add('popup_op')
@@ -122,7 +130,6 @@ function getImageData(target) {
 /**
  * Submit формы профиля
  */
-
 function addSubmit(form) {
   form.addEventListener('submit', (event) => {
     event.preventDefault()
@@ -141,7 +148,6 @@ function addSubmit(form) {
 /**
  * Верстка карточек из входящего массива
  */
-
 function addCards(initialCards) {
   initialCards.forEach((card) => {
     elements.prepend(createCard(card))
@@ -152,22 +158,16 @@ function addCards(initialCards) {
  * Верстка отдельной карточки 
  */
 function createCard(data) {
-  const card = document.createElement('div')
-  card.classList.add('element')
+  const cardTemp = document.getElementById('templ-element').cloneNode(true)
+  const card = cardTemp.content.querySelector('div')
 
-  card.innerHTML = `
-      <div class="element__rectangl">
-        <div class="element__mask">
-          <img class="element__image p__button" data-target="bigimage" src="${data.link}" alt="${data.name}">
-          <button class="element__trash" type="button"></button>
-        </div>
-        <div class="element__group">
-          <h2 class="element__text">${data.name}</h2>
-          <button class="element__like" type="button"></button>
-        </div>
-      </div>`
+  const image = card.querySelector('.element__image')
+  const caption = card.querySelector('.element__text')
 
-  createCardListeners(card)
+  image.src = data.link
+  caption.innerText = data.name
+
+  createCardListeners(card, image)
 
   return card
 }
@@ -176,17 +176,25 @@ function createCard(data) {
  * События like и delete для отдельной карточки 
  */
 
-function createCardListeners(card) {
+function createCardListeners(card, image) {
   const toggleLike = (event) => {
     event.target.classList.toggle('element__like_active')
   }
 
-  const deleteCard = (event) => {
-    event.target.offsetParent.remove()
+  const deleteCard = () => {
+    card.remove()
   }
+  
+  image.addEventListener('click', (e) => {
+    e.stopPropagation()
+    getImageData(e.target)
+    openPopup(bigimagePopup)
+  })
 
   card.querySelector('.element__like').addEventListener('click', toggleLike)
   card.querySelector('.element__trash').addEventListener('click', deleteCard)
+  closeByIcon(bigimagePopup)
+  closeByOverlay(bigimagePopup)
 }
 
 /**
@@ -196,6 +204,8 @@ function addNewCard(event, mestoForm) {
   event.preventDefault()
   const name = mestoForm['mesto-name'].value
   const link = mestoForm['mesto-link'].value
-  const card = { name, link }
-  addCards([card])
+  if (name && link) {
+    const card = { name, link }
+    addCards([card])
+  }
 }
