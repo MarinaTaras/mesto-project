@@ -1,15 +1,28 @@
-const popupImage = document.querySelector('.popup__image')
-const profileName = document.querySelector('.profile__name')
-const profileProfession = document.querySelector('.profile__profession')
-const bigimagePopup = document.getElementById('bigimage')
 
-let profileForm
+// POPUPS
+// окно формы профиля
+const profilePopup = document.querySelector('.popup__profile')   
+// окно добавления карточки  
+const addCardPopup = document.querySelector('.popup__mesto')
+// картинка в отдельном окне
+const popupImage = document.querySelector('.popup__image') 
+const popups = [ profilePopup, addCardPopup, popupImage ]
 
-// блок profile
-const infoButton = document.querySelector('#infobutton')
+// КНОПКИ ОТКРЫТИЯ ПОПАПОВ
+const profileButton = document.getElementById('infobutton')
+const addCardButton = document.getElementById('addbutton')
 
-//блок место
-const addButton = document.querySelector('#addbutton')
+// ФОРМЫ 
+// редактирование профиля
+const profileForm = document.forms['profile']
+// добавление места
+const mestoForm = document.forms['mesto-form']  
+
+// ПОЛЯ ПРОФИЛЯ
+// имя профиля в шапке
+const profileName = document.querySelector('.profile__name') 
+// профессия профиля в шапке
+const profileProfession = document.querySelector('.profile__profession') 
 
 //блок карточки
 const elements = document.querySelector('.elements')
@@ -18,19 +31,49 @@ const elements = document.querySelector('.elements')
 const bigImage = popupImage.querySelector('.popup__bigimage')
 const bigImageText = popupImage.querySelector('.popup__text')
 
+
 // функции
+
+// добавим события
+
+profileButton.addEventListener('click', () => {
+  getProfileData()
+  openPopup(profilePopup)
+})
+
+addCardButton.addEventListener('click', () => {
+  openPopup(addCardPopup)
+})
+
+mestoForm && mestoForm.addEventListener('submit', addNewCard)
+profileForm && profileForm.addEventListener('submit', submitProfile)
+
+closeByIcon(popupImage)
+closeByOverlay(popupImage)
 
 /** 
  * добавление карточек
  */
 addCards(initialCards)
 
+// универсальный метод закрытия 
+function closePopup(popup) {
+  popup.classList.remove('popup_opened')
+}
+
 /**
- * Универсальная функция открытия попапов
+ * универсальный метод открытия 
+ */
+function openPopup(popup) {
+  popup.classList.add('popup_opened')
+}
+
+/**
+ * Универсальная функция закрытия попапов
  */
 
-const popupButton = document.querySelectorAll('.p__button')
-popupButton.forEach((pButton) => {
+const popupButtons = document.querySelectorAll('.p__button')
+popupButtons.forEach((pButton) => {
   if (!pButton.dataset.target) {
     console.log('на кнопке отсутствует data атрибут target')
     return
@@ -41,41 +84,21 @@ popupButton.forEach((pButton) => {
     return
   }
 
-  pButton.addEventListener('click', (e) => {
-    getProfileData(popup)
-    openPopup(popup)
-  })
-
-  // закрыть попап
+  // закрыть по иконке
   closeByIcon(popup)
   
-  //для оверлей
+  //закрыть по оверлей
   closeByOverlay(popup)
 
-  //ищем форму
-  const profileForm = popup.querySelector('#profileform')
-  if (profileForm) {
-    addSubmit(profileForm)
-  }
-
-  //ищем форму для добавления карточки
-  const mestoForm = popup.querySelector('#mestoform')
-  if (mestoForm) {
-    mestoForm.addEventListener('submit', (event) => addNewCard(event, mestoForm))
-  }
 })
+
+
 
 /**
  *  Варианты закрытия окна
  */
 
-function closePopup(popup) {
-  setTimeout(() => {
-    popup.classList.remove('popup_opened')
-  }, 500)
-  popup.classList.remove('popup_op')
-}
-
+// закрытие при клике по оверлей
 function closeByOverlay(popup) {
   if (popup.className.includes('overlay')) {
     popup.addEventListener('click', (e) => {
@@ -86,33 +109,19 @@ function closeByOverlay(popup) {
   }
 }
 
+// закрытие при клике на иконку (крест)
 function closeByIcon(popup) {
-  const close = popup.querySelectorAll('.close')
-  close.forEach((c) => c.addEventListener('click', () => closePopup(popup)))
+  const close = popup.querySelector('.close')
+  close.addEventListener('click', () => closePopup(popup))
 }
 
-/**
- * Открытие окна
- */
-function openPopup(popup) {
-  setTimeout(() => {
-    popup.classList.add('popup_op')
-  }, 0)
-  popup.classList.add('popup_opened')
-}
 
 /**
  * Подготовка данных для профиля
  */
-function getProfileData(popup) {
-  const profileForm = popup.querySelector('#profileform')
-    if (profileForm) {
-      const profileNameValue = profileForm['profile-name']
-      const profileProfessionValue = profileForm['profile-profession']
-
-      profileNameValue.value = profileName.innerText
-      profileProfessionValue.value = profileProfession.innerText
-    }
+function getProfileData() {
+    profileForm['profile-name'].value = profileName.innerText
+    profileForm['profile-profession'].value = profileProfession.innerText
 }
 
 /**
@@ -130,19 +139,19 @@ function getImageData(target) {
 /**
  * Submit формы профиля
  */
-function addSubmit(form) {
-  form.addEventListener('submit', (event) => {
+function submitProfile(event) {
+  
     event.preventDefault()
 
-    const profileNameValue = form['profile-name']
-    const profileProfessionValue = form['profile-profession']
+    const profileNameValue = profileForm['profile-name']
+    const profileProfessionValue = profileForm['profile-profession']
 
     profileName.innerText = profileNameValue.value
     profileProfession.innerText = profileProfessionValue.value
 
-    profileNameValue.value = ''
-    profileProfessionValue.value = ''
-  })
+    event.target.reset()
+    closePopup(profilePopup)
+  
 }
 
 /**
@@ -165,6 +174,7 @@ function createCard(data) {
   const caption = card.querySelector('.element__text')
 
   image.src = data.link
+  image.alt = data.name
   caption.innerText = data.name
 
   createCardListeners(card, image)
@@ -173,39 +183,56 @@ function createCard(data) {
 }
 
 /**
- * События like и delete для отдельной карточки 
+ * События для отдельной карточки 
  */
 
 function createCardListeners(card, image) {
+  const likeBtn = card.querySelector('.element__like')
+  const delBtn = card.querySelector('.element__trash')
+
   const toggleLike = (event) => {
     event.target.classList.toggle('element__like_active')
   }
 
-  const deleteCard = () => {
-    card.remove()
-  }
-  
-  image.addEventListener('click', (e) => {
+  const openCard = (e) => {
     e.stopPropagation()
     getImageData(e.target)
-    openPopup(bigimagePopup)
-  })
+    openPopup(popupImage)
 
-  card.querySelector('.element__like').addEventListener('click', toggleLike)
-  card.querySelector('.element__trash').addEventListener('click', deleteCard)
-  closeByIcon(bigimagePopup)
-  closeByOverlay(bigimagePopup)
+  }
+
+  const deleteCard = () => {
+    // перед удалением карточки очистим слушатели
+    image.removeEventListener('click', openCard)
+    likeBtn.removeEventListener('click', toggleLike)
+    delBtn.removeEventListener('click', deleteCard)
+
+    card.remove()
+  }
+
+  image.addEventListener('click', openCard)
+  likeBtn.addEventListener('click', toggleLike)
+  delBtn.addEventListener('click', deleteCard)
+  
 }
 
 /**
  * Добавление новой карточки
  */
-function addNewCard(event, mestoForm) {
+function addNewCard(event) {
   event.preventDefault()
   const name = mestoForm['mesto-name'].value
   const link = mestoForm['mesto-link'].value
+  
   if (name && link) {
     const card = { name, link }
     addCards([card])
   }
+
+  event.target.reset()
 }
+
+// добавим display flex чтобы окна на выскакивали перед отрисовкой страницы
+popups.forEach((popup) => {
+  popup.style.display = 'flex'
+})
