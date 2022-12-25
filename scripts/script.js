@@ -130,9 +130,10 @@ function getProfileData() {
 function getImageData(target) {
   if (target.className.includes('element__image')) {
       const link = target.src
-      const caption = target.closest('.element').querySelector('.element__text').innerText
+      const caption = target.alt
       bigImage.src = link
       bigImageText.innerText = caption
+      bigImage.alt = caption
     }
 }
 
@@ -149,7 +150,6 @@ function submitProfile(event) {
     profileName.innerText = profileNameValue.value
     profileProfession.innerText = profileProfessionValue.value
 
-    event.target.reset()
     closePopup(profilePopup)
   
 }
@@ -178,6 +178,8 @@ function createCard(data) {
   caption.innerText = data.name
 
   createCardListeners(card, image)
+  
+  closePopup(addCardPopup)
 
   return card
 }
