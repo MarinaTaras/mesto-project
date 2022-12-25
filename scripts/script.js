@@ -232,7 +232,7 @@ function addNewCard(event) {
   event.target.reset()
 }
 
-// добавим display flex чтобы окна на выскакивали перед отрисовкой страницы
+// добавим display flex чтобы окна не выскакивали перед отрисовкой страницы
 popups.forEach((popup) => {
   popup.style.display = 'flex'
 })
