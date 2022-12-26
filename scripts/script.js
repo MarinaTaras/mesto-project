@@ -178,8 +178,6 @@ function createCard(data) {
   caption.innerText = data.name
 
   createCardListeners(card, image)
-  
-  closePopup(addCardPopup)
 
   return card
 }
@@ -230,6 +228,8 @@ function addNewCard(event) {
     const card = { name, link }
     addCards([card])
   }
+
+  closePopup(addCardPopup)
 
   event.target.reset()
 }
