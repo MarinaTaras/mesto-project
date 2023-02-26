@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
     />
     <title>Место</title>
-    <link rel="stylesheet" href="./pages/index.css" />
+    <link rel="stylesheet" href="./pages/index.css" /><!-- убрать -->
   </head>
   <body>
     <div class="page">
@@ -56,26 +56,38 @@
 
     <div class="popup popup__profile overlay" id="profile">
       <div class="popup__container">
-        <button class="popup__close close" type="button" id="closebutton">
+        <button class="popup__close close" type="button">
           <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close" />
         </button>
-        <form class="popup__form" name="profile" id="profileform">
+        <form class="popup__form" name="profile" id="profileform" novalidate>
           <h2 class="popup__title">Редактировать профиль</h2>
           <fieldset class="popup__fieldset">
             <input
               class="popup__item"
-              id="firstitem"
+              id="profilename"
               placeholder="Жак-Ив Кусто"
               type="text"
               name="profile-name"
+              minlength="2"
+              maxlength="40"
+              required
+              pattern="^[A-Za-zА-Яа-я\-\s]+$"
+              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
             />
+            <span class="popup__span profilename-error">Вы пропустили это поле</span>
             <input
               class="popup__item"
-              id="seconditem"
+              id="profileprofession"
               placeholder="Исследователь океана"
               type="text"
               name="profile-profession"
+              minlength="2"
+              maxlength="200"
+              required
+              pattern="^[A-Za-zА-Яа-я\-\s]+$"
+              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
             />
+            <span class="popup__span profileprofession-error">Вы пропустили это поле</span>
           </fieldset>
           <button class="popup__button" type="submit">Сохранить</button>
         </form>
@@ -84,26 +96,36 @@
 
     <div class="popup popup__mesto overlay" id="mesto">
       <div class="popup__container">
-        <button class="popup__close close" type="button" id="closebutton">
+        <button class="popup__close close" type="button">
           <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close" />
         </button>
-        <form class="popup__form" name="mesto-form" id="mestoform">
+        <form class="popup__form" name="mesto-form" id="mestoform" novalidate>
           <h2 class="popup__title">Новое место</h2>
           <fieldset class="popup__fieldset">
             <input
               class="popup__item"
-              id="firstitem"
+              id="mestoname"
               placeholder="Название"
               type="text"
               name="mesto-name"
+              minlength="2"
+              maxlength="30"
+              required
+              pattern="^[A-Za-zА-Яа-я\-\s]+$"
+              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
             />
+            <span class="popup__span mestoname-error">Вы пропустили это поле</span>
             <input
               class="popup__item"
-              id="seconditem"
+              id="mestolink"
               placeholder="Ссылка на картинку"
-              type="text"
+              type="url"
               name="mesto-link"
+              required
+              pattern="[-a-zA-Z0-9@:%_\+.~#?&\/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&\/=]*)?"
+              data-error-message="Введите адрес сайта"
             />
+            <span class="popup__span mestolink-error">Введите адрес сайта</span>
           </fieldset>
           <button class="popup__button" type="submit">Сохранить</button>
         </form>
@@ -112,7 +134,7 @@
 
     <div class="popup popup__image overlay" id="bigimage">
       <div class="popup__container popup__container_image">
-        <button type="button" class="popup__close close" id="closebutton">
+        <button type="button" class="popup__close close">
           <img class="popup__close-icon" src="./images/Close_Icon.svg" alt="close" />
         </button>
         <img
@@ -142,8 +164,9 @@
         </div>
       </div>
     </template>
+    <!-- подключаем файл JS скриптов -->
+    
+  <script type="module" src="./index.js"></script>
   </body>
-  <!-- подключаем файл JS скриптов -->
-  <script src="./scripts/cards.js"></script>
-  <script src="./scripts/script.js"></script>
+    
 </html>

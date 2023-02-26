@@ -1,0 +1,14 @@
+.popup__span {
+  display: flex;
+  height: 30px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: white;
+  align-self: start;
+  text-align: start;
+  margin: 5px 0 0 0;
+  padding: 0;
+}
