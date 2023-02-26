@@ -1,4 +1,4 @@
-
+import './pages/index.css'
 // POPUPS
 // окно формы профиля
 const profilePopup = document.querySelector('.popup__profile')
