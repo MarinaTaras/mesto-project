@@ -1,5 +1,5 @@
 // импорт функций
-import {closePopup} from "../index.js"
+import {closePopup} from "../components/util"
 
 // функции модальных окон
 /**

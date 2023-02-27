@@ -1,9 +1,37 @@
-// импорт функций
-import {closePopup, mestoForm, addCardPopup} from "../index.js"
+import { closeByEsc, closeByIcon, closeByOverlay } from "./modal.js"
+import { closePopup, openPopup } from "./util.js"
+
+
+const addCardPopup = document.querySelector('.popup__mesto')
+const mestoForm = document.forms['mesto-form']
+
+export function createCardForm() {
+
+  openPopup(addCardPopup)
+
+  
+
+  // добавление места
+ 
+}
+
+mestoForm && mestoForm.addEventListener('submit', addNewCard)
+
+
+//блок картинка
+const popupImage = document.querySelector('.popup__image')
+const bigImage = popupImage.querySelector('.popup__bigimage')
+const bigImageText = popupImage.querySelector('.popup__text')
+
+closeByIcon(popupImage)
+closeByOverlay(popupImage)
+closeByEsc(popupImage)
+
+
 /**
  * Подготовка данных для картинки в отдельном окне
  */
-export function getImageData(target) {
+function getImageData(target) {
   if (target.className.includes('element__image')) {
     const link = target.src
     const caption = target.alt
@@ -27,7 +55,7 @@ export function addCards(initialCards) {
 /**
  * Верстка отдельной карточки 
  */
-export function createCard(data) {
+function createCard(data) {
   const cardTemp = document.getElementById('templ-element').cloneNode(true)
   const card = cardTemp.content.querySelector('div')
 
@@ -47,7 +75,7 @@ export function createCard(data) {
  * События для отдельной карточки 
  */
 
-export function createCardListeners(card, image) {
+function createCardListeners(card, image) {
   const likeBtn = card.querySelector('.element__like')
   const delBtn = card.querySelector('.element__trash')
 
@@ -59,7 +87,6 @@ export function createCardListeners(card, image) {
     e.stopPropagation()
     getImageData(e.target)
     openPopup(popupImage)
-
   }
 
   const deleteCard = () => {

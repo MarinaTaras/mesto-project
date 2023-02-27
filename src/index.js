@@ -1,12 +1,10 @@
 import './pages/index.css'
+
+import { closePopup, openPopup } from './components/util'
+
 // POPUPS
 // окно формы профиля
 const profilePopup = document.querySelector('.popup__profile')
-// окно добавления карточки  
-export const addCardPopup = document.querySelector('.popup__mesto')
-// картинка в отдельном окне
-const popupImage = document.querySelector('.popup__image')
-const popups = [profilePopup, addCardPopup, popupImage]
 
 // КНОПКИ ОТКРЫТИЯ ПОПАПОВ
 const profileButton = document.getElementById('infobutton')
@@ -15,8 +13,6 @@ const addCardButton = document.getElementById('addbutton')
 // ФОРМЫ 
 // редактирование профиля
 const profileForm = document.forms['profile']
-// добавление места
-export const mestoForm = document.forms['mesto-form']
 
 // ПОЛЯ ПРОФИЛЯ
 // имя профиля в шапке
@@ -25,10 +21,6 @@ const profileName = document.querySelector('.profile__name')
 const profileProfession = document.querySelector('.profile__profession')
 
 
-//блок картинка
-const bigImage = popupImage.querySelector('.popup__bigimage')
-const bigImageText = popupImage.querySelector('.popup__text')
-
 // импорт массива первоначальных карточек
 import {initialCards} from "./components/cards.js"
 
@@ -36,10 +28,11 @@ import {initialCards} from "./components/cards.js"
 import {closeByOverlay, closeByIcon, closeByEsc} from "./components/modal.js"
 
 // импорт функций работы с карточками
-import {getImageData, addCards, createCard, createCardListeners, addNewCard} from "./components/card.js"
+import {addCards, createCardForm} from "./components/card.js"
 
 // импорт функции валидации
 import {enableValidation} from "./components/validate.js"
+
 
 // функции
 
@@ -51,31 +44,17 @@ profileButton.addEventListener('click', () => {
 })
 
 addCardButton.addEventListener('click', () => {
-  openPopup(addCardPopup)
+  createCardForm()
 })
 
-mestoForm && mestoForm.addEventListener('submit', addNewCard)
-profileForm && profileForm.addEventListener('submit', submitProfile)
 
-closeByIcon(popupImage)
-closeByOverlay(popupImage)
+profileForm && profileForm.addEventListener('submit', submitProfile)
 
 /** 
  * добавление карточек
  */
 addCards(initialCards)
 
-// универсальный метод закрытия 
-export function closePopup(popup) {
-  popup.classList.remove('popup_opened')
-}
-
-/**
- * универсальный метод открытия 
- */
-function openPopup(popup) {
-  popup.classList.add('popup_opened')
-}
 
 /**
  * Универсальная функция закрытия попапов
@@ -130,11 +109,23 @@ function submitProfile(event) {
 
 }
 
-// добавим display flex чтобы окна не выскакивали перед отрисовкой страницы
-popups.forEach((popup) => {
-  popup.style.display = 'flex'
-})
+// // добавим display flex чтобы окна не выскакивали перед отрисовкой страницы
+// popups.forEach((popup) => {
+//   popup.style.display = 'flex'
+// })
 
 // валидация форм
-enableValidation()
+
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__item',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_inactive',
+  inputErrorClass: 'popup__item_error',
+  errorClass: 'popup__span_error-active'
+}); 
+
+
+
+
 

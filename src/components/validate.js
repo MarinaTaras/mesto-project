@@ -1,20 +1,21 @@
 // валидация форм
 
-export function enableValidation() {
+
+export function enableValidation(options) {
 
 // Функция, которая добавляет класс с ошибкой
 const showInputError = (popupForm, popupItem, errorMessage) => {
   const popupError = popupForm.querySelector(`.${popupItem.id}-error`);
-  popupItem.classList.add('popup__item_error');
+  popupItem.classList.add(options.inputErrorClass);
   popupError.textContent = errorMessage;
-  popupError.classList.add('popup__span_error-active');
+  popupError.classList.add(options.errorClass);
 };
 
 // Функция, которая удаляет класс с ошибкой
 const hideInputError = (popupForm, popupItem) => {
   const popupError = popupForm.querySelector(`.${popupItem.id}-error`);
-  popupItem.classList.remove('popup__item_error');
-  popupError.classList.remove('popup__span_error-active');
+  popupItem.classList.remove(options.inputErrorClass);
+  popupError.classList.remove(options.errorClass);
 };
 
 // Функция, которая проверяет валидность поля
@@ -54,18 +55,18 @@ const invailidItem = (itemArrows) => {
 const buttonState = (itemArrows, popupButton) => {
   if (invailidItem(itemArrows)) {
     popupButton.disabled = true;
-    popupButton.classList.add('popup__button_inactive');
+    popupButton.classList.add(options.inactiveButtonClass);
   } else {
     // иначе сделай кнопку активной
     popupButton.disabled = false;
-    popupButton.classList.remove('popup__button_inactive');
+    popupButton.classList.remove(options.inactiveButtonClass);
   }
 }
 
 // создадим функцию, которая примет параметром элементы формы и добавит полям нужные обработчики
 const popupLisners = (popupForm) => {
-  const itemArrows = Array.from(popupForm.querySelectorAll('.popup__item'))
-  const popupButton = popupForm.querySelector('.popup__button')
+  const itemArrows = Array.from(popupForm.querySelectorAll(options.inputSelector))
+  const popupButton = popupForm.querySelector(options.submitButtonSelector)
   
   buttonState(itemArrows, popupButton)
 
@@ -80,7 +81,7 @@ const popupLisners = (popupForm) => {
 
 // проходим по всем формам
 const formValidation = () => {
-  const formArrows = Array.from(document.querySelectorAll('.popup__form'))
+  const formArrows = Array.from(document.querySelectorAll(options.formSelector))
   formArrows.forEach((popupForm) => {
     popupLisners(popupForm)
   })
