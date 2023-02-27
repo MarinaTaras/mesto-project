@@ -1,8 +1,6 @@
 // валидация форм
 
 export function enableValidation() {
-const popupForm = document.querySelector('.popup__form')
-const popupItem = document.querySelector('.popup__item')
 
 // Функция, которая добавляет класс с ошибкой
 const showInputError = (popupForm, popupItem, errorMessage) => {
