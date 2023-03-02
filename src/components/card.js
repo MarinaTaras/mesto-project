@@ -1,32 +1,23 @@
-import { closeByEsc, closeByIcon, closeByOverlay } from "./modal.js"
+import { closeByEsc, closeByIcon, closeByOverlay } from "./modal"
 import { closePopup, openPopup } from "./util.js"
 
-
+//константы
 const addCardPopup = document.querySelector('.popup__mesto')
 const mestoForm = document.forms['mesto-form']
 
-export function createCardForm() {
-
-  openPopup(addCardPopup)
-
-  
-
-  // добавление места
- 
-}
-
-mestoForm && mestoForm.addEventListener('submit', addNewCard)
-
+//верстка отдельных карточек
+const elements = document.querySelector('.elements')
 
 //блок картинка
 const popupImage = document.querySelector('.popup__image')
 const bigImage = popupImage.querySelector('.popup__bigimage')
 const bigImageText = popupImage.querySelector('.popup__text')
 
+//события
 closeByIcon(popupImage)
 closeByOverlay(popupImage)
-closeByEsc(popupImage)
 
+mestoForm && mestoForm.addEventListener('submit', addNewCard)
 
 /**
  * Подготовка данных для картинки в отдельном окне
@@ -41,12 +32,10 @@ function getImageData(target) {
   }
 }
 
-
 /**
  * Верстка карточек из входящего массива
  */
 export function addCards(initialCards) {
-  const elements = document.querySelector('.elements')
   initialCards.forEach((card) => {
     elements.prepend(createCard(card))
   })
@@ -61,7 +50,6 @@ function createCard(data) {
 
   const image = card.querySelector('.element__image')
   const caption = card.querySelector('.element__text')
-
   image.src = data.link
   image.alt = data.name
   caption.innerText = data.name
@@ -107,7 +95,7 @@ function createCardListeners(card, image) {
 /**
  * Добавление новой карточки
  */
-export function addNewCard(event) {
+function addNewCard(event) {
   event.preventDefault()
   const name = mestoForm['mesto-name'].value
   const link = mestoForm['mesto-link'].value

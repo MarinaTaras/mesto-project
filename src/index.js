@@ -1,3 +1,4 @@
+
 import './pages/index.css'
 
 import { closePopup, openPopup } from './components/util'
@@ -5,6 +6,8 @@ import { closePopup, openPopup } from './components/util'
 // POPUPS
 // окно формы профиля
 const profilePopup = document.querySelector('.popup__profile')
+// окно формы добпвления карточи 
+const mestoPopup = document.querySelector('.popup__mesto')
 
 // КНОПКИ ОТКРЫТИЯ ПОПАПОВ
 const profileButton = document.getElementById('infobutton')
@@ -20,18 +23,17 @@ const profileName = document.querySelector('.profile__name')
 // профессия профиля в шапке
 const profileProfession = document.querySelector('.profile__profession')
 
-
 // импорт массива первоначальных карточек
-import {initialCards} from "./components/cards.js"
+import { initialCards } from "./components/cards"
 
 // импорт функций работы модальных окон
-import {closeByOverlay, closeByIcon, closeByEsc} from "./components/modal.js"
+import { closeByOverlay, closeByIcon, closeByEsc } from "./components/modal"
 
 // импорт функций работы с карточками
-import {addCards, createCardForm} from "./components/card.js"
+import { addCards } from "./components/card.js"
 
 // импорт функции валидации
-import {enableValidation} from "./components/validate.js"
+import { enableValidation } from "./components/validate.js"
 
 
 // функции
@@ -44,7 +46,7 @@ profileButton.addEventListener('click', () => {
 })
 
 addCardButton.addEventListener('click', () => {
-  createCardForm()
+  openPopup(mestoPopup)
 })
 
 
@@ -79,10 +81,9 @@ popupButtons.forEach((pButton) => {
   closeByOverlay(popup)
 
   //закрыть по кнопке Esc
-  closeByEsc(popup)
+  document.addEventListener('keydown', closeByEsc);
 
 })
-
 
 /**
  * Подготовка данных для профиля
@@ -123,7 +124,7 @@ enableValidation({
   inactiveButtonClass: 'popup__button_inactive',
   inputErrorClass: 'popup__item_error',
   errorClass: 'popup__span_error-active'
-}); 
+});
 
 
 

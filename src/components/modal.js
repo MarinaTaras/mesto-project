@@ -1,5 +1,8 @@
 // импорт функций
-import {closePopup} from "../components/util"
+import { closePopup } from "../components/util"
+
+//константы
+
 
 // функции модальных окон
 /**
@@ -24,11 +27,9 @@ export function closeByIcon(popup) {
 }
 
 // закрытие при клике на Esc
-export function closeByEsc(popup) {
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      closePopup(popup)
-    }
-  })
+export function closeByEsc(evt) {
+  if (evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened')
+    closePopup(openedPopup)
+  }
 }
-
