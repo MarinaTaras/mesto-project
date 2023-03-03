@@ -79,10 +79,6 @@ popupButtons.forEach((pButton) => {
 
   //закрыть по оверлей
   closeByOverlay(popup)
-
-  //закрыть по кнопке Esc
-  document.addEventListener('keydown', closeByEsc);
-
 })
 
 /**
