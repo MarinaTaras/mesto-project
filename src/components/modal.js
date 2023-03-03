@@ -7,7 +7,7 @@ import { closePopup } from "../components/util"
 // функции модальных окон
 /**
  *  Варианты закрытия окна
- */
+*/
 
 // закрытие при клике по оверлей
 export function closeByOverlay(popup) {

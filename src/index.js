@@ -106,11 +106,6 @@ function submitProfile(event) {
 
 }
 
-// // добавим display flex чтобы окна не выскакивали перед отрисовкой страницы
-// popups.forEach((popup) => {
-//   popup.style.display = 'flex'
-// })
-
 // валидация форм
 
 enableValidation({
