@@ -102,6 +102,25 @@
       <h2 class="popup__text"></h2>
     </div>
   </div>
+<!-- попап загрузки аватарки -->
+  <div class="popup popup__avatar overlay" id="mesto">
+    <div class="popup__container">
+      <button class="popup__close close" type="button">
+        <img class="popup__close-icon" src="<%=require('./images/Close_Icon.svg')%>" alt="close" />
+      </button>
+      <form class="popup__form" name="avatar-form" id="avatarform" novalidate>
+        <h2 class="popup__title">Новое место</h2>
+        <fieldset class="popup__fieldset">
+          <input class="popup__item" id="avatarlink" placeholder="Ссылка на картинку" type="url"
+            name="avatar-link" required
+            pattern="[-a-zA-Z0-9@:%_\+.~#?&\/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&\/=]*)?"
+            data-error-message="Введите адрес ссылки на аватар" />
+          <span class="popup__span mestolink-error">Введите адрес сайта ссылки на аватар</span>
+        </fieldset>
+        <button class="popup__button" type="submit">Сохранить</button>
+      </form>
+    </div>
+  </div>
 
   <template class="template__element" id="templ-element">
     <div class="element">
