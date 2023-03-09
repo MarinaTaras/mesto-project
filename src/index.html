@@ -21,6 +21,9 @@
       <main class="content">
         <section class="profile">
           <img class="profile__avatar" src="<%=require('./images/image.jpg')%>" alt="Аватар" />
+          <button class="profile__editbutton p__button" type="button" data-target="editavatar" id="editbutton">
+            <img src="<%=require('./images/EditAvatar.svg')%>" alt="редактирование">
+          </button>
           <div class="profile__info">
             <div class="profile__edit-name">
               <h1 class="profile__name">Жак-Ив Кустo</h1>
@@ -102,20 +105,20 @@
       <h2 class="popup__text"></h2>
     </div>
   </div>
-<!-- попап загрузки аватарки -->
+  <!-- попап загрузки аватарки -->
   <div class="popup popup__avatar overlay" id="mesto">
     <div class="popup__container">
       <button class="popup__close close" type="button">
         <img class="popup__close-icon" src="<%=require('./images/Close_Icon.svg')%>" alt="close" />
       </button>
       <form class="popup__form" name="avatar-form" id="avatarform" novalidate>
-        <h2 class="popup__title">Новое место</h2>
+        <h2 class="popup__title">Обновить аватар</h2>
         <fieldset class="popup__fieldset">
-          <input class="popup__item" id="avatarlink" placeholder="Ссылка на картинку" type="url"
+          <input class="popup__item" id="avatarlink" placeholder="https://somewebsite.com/someimage.jpg" type="url"
             name="avatar-link" required
             pattern="[-a-zA-Z0-9@:%_\+.~#?&\/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&\/=]*)?"
             data-error-message="Введите адрес ссылки на аватар" />
-          <span class="popup__span mestolink-error">Введите адрес сайта ссылки на аватар</span>
+          <span class="popup__span avatarlink-error">Введите ссылку на аватар</span>
         </fieldset>
         <button class="popup__button" type="submit">Сохранить</button>
       </form>
@@ -131,7 +134,10 @@
         </div>
         <div class="element__group">
           <h2 class="element__text"></h2>
-          <button class="element__like" type="button"></button>
+          <div class="element__likes">
+            <button class="element__like" type="button"></button>
+            <span class="element__like-count">6</span>
+          </div>
         </div>
       </div>
     </div>

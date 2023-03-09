@@ -1,17 +1,19 @@
-import { closeByEsc, closeByIcon, closeByOverlay } from "./modal"
-import { closePopup, openPopup } from "./util.js"
+import { userId } from ".."
+import { addMyLike, deleteMyCard, deleteMyLike, postNewCard } from "./api"
+import { closeByIcon, closeByOverlay } from "./modal"
+import { closePopup, getAllCards, openPopup } from "./util.js"
 
 //константы
 const addCardPopup = document.querySelector('.popup__mesto')
 const mestoForm = document.forms['mesto-form']
 
-//верстка отдельных карточек
-const elements = document.querySelector('.elements')
-
 //блок картинка
 const popupImage = document.querySelector('.popup__image')
 const bigImage = popupImage.querySelector('.popup__bigimage')
 const bigImageText = popupImage.querySelector('.popup__text')
+
+// раздел для отображения карточек
+const elements = document.querySelector('.elements')
 
 //события
 closeByIcon(popupImage)
@@ -36,7 +38,7 @@ function getImageData(target) {
  * Верстка карточек из входящего массива
  */
 export function addCards(initialCards) {
-  initialCards.forEach((card) => {
+  return initialCards.reverse().forEach((card) => {
     elements.prepend(createCard(card))
   })
 }
@@ -47,14 +49,26 @@ export function addCards(initialCards) {
 function createCard(data) {
   const cardTemp = document.getElementById('templ-element').cloneNode(true)
   const card = cardTemp.content.querySelector('div')
+  const trash = card.querySelector('.element__trash')
+
+  if (userId !== data.owner._id) trash.remove()
 
   const image = card.querySelector('.element__image')
   const caption = card.querySelector('.element__text')
+  const likeBtn = card.querySelector('.element__like')
+  const likeCount = card.querySelector('.element__like-count')
   image.src = data.link
   image.alt = data.name
   caption.innerText = data.name
+  likeCount.innerText = data.likes.length
 
-  createCardListeners(card, image)
+  if (isLiked(data)) {
+    likeBtn.classList.add('element__like_active')
+  } else {
+    likeBtn.classList.remove('element__like_active')
+  }
+
+  createCardListeners(card, image, data)
 
   return card
 }
@@ -63,12 +77,32 @@ function createCard(data) {
  * События для отдельной карточки 
  */
 
-function createCardListeners(card, image) {
+function createCardListeners(card, image, data) {
   const likeBtn = card.querySelector('.element__like')
+  const likeCount = card.querySelector('.element__like-count')
   const delBtn = card.querySelector('.element__trash')
 
   const toggleLike = (event) => {
-    event.target.classList.toggle('element__like_active')
+
+    if (isLiked(data)) {
+
+      deleteMyLike(data)
+        .then((card) => {
+          event.target.classList.remove('element__like_active')
+          likeCount.innerText = card.likes.length
+          data = card
+        })
+        .catch(e => console.log(e))
+    } else {
+
+      addMyLike(data)
+        .then((card) => {
+          event.target.classList.add('element__like_active')
+          likeCount.innerText = card.likes.length
+          data = card
+        })
+        .catch(e => console.log(e))
+    }
   }
 
   const openCard = (e) => {
@@ -78,34 +112,47 @@ function createCardListeners(card, image) {
   }
 
   const deleteCard = () => {
+
     // перед удалением карточки очистим слушатели
     image.removeEventListener('click', openCard)
     likeBtn.removeEventListener('click', toggleLike)
-    delBtn.removeEventListener('click', deleteCard)
+    delBtn && delBtn.removeEventListener('click', deleteCard)
 
-    card.remove()
+    deleteMyCard(data).then(() => card.remove())
+
   }
 
   image.addEventListener('click', openCard)
   likeBtn.addEventListener('click', toggleLike)
-  delBtn.addEventListener('click', deleteCard)
+  delBtn && delBtn.addEventListener('click', deleteCard)
 
+}
+//проверяем, поставил ли автор лайк
+function isLiked(data) {
+  let liked = false
+  data?.likes.forEach(likeAuthor => {
+    if (likeAuthor._id === userId) liked = true
+  })
+
+  return liked
 }
 
 /**
  * Добавление новой карточки
  */
+
 function addNewCard(event) {
   event.preventDefault()
   const name = mestoForm['mesto-name'].value
   const link = mestoForm['mesto-link'].value
+  const body = JSON.stringify({ name, link })
 
-  if (name && link) {
-    const card = { name, link }
-    addCards([card])
-  }
+  postNewCard(body)
+    .then((result) => {
+      addCards([result])
+      closePopup(addCardPopup)
+      event.target.reset()
+    })
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
 
-  closePopup(addCardPopup)
-
-  event.target.reset()
 }

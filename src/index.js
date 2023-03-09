@@ -1,17 +1,24 @@
-
 import './pages/index.css'
-
-import { closePopup, openPopup } from './components/util'
+import { closePopup, getAllCards, openPopup } from './components/util'
+// импорт функции валидации
+import { enableValidation } from "./components/validate.js"
+// импорт функций работы модальных окон
+import { closeByOverlay, closeByIcon, closeByEsc } from "./components/modal"
+import { avatarForm, editAvatar } from './components/avatar'
+import { editMyProfile } from './components/api'
 
 // POPUPS
 // окно формы профиля
 const profilePopup = document.querySelector('.popup__profile')
 // окно формы добпвления карточи 
 const mestoPopup = document.querySelector('.popup__mesto')
+// окно редактирования аватара
+export const avatarPopup = document.querySelector('.popup__avatar')
 
 // КНОПКИ ОТКРЫТИЯ ПОПАПОВ
 const profileButton = document.getElementById('infobutton')
 const addCardButton = document.getElementById('addbutton')
+const editAvatarButton = document.getElementById('editbutton')
 
 // ФОРМЫ 
 // редактирование профиля
@@ -23,18 +30,7 @@ const profileName = document.querySelector('.profile__name')
 // профессия профиля в шапке
 const profileProfession = document.querySelector('.profile__profession')
 
-// импорт массива первоначальных карточек
-import { initialCards } from "./components/cards"
-
-// импорт функций работы модальных окон
-import { closeByOverlay, closeByIcon, closeByEsc } from "./components/modal"
-
-// импорт функций работы с карточками
-import { addCards } from "./components/card.js"
-
-// импорт функции валидации
-import { enableValidation } from "./components/validate.js"
-
+export let userId
 
 // функции
 
@@ -49,13 +45,21 @@ addCardButton.addEventListener('click', () => {
   openPopup(mestoPopup)
 })
 
+editAvatarButton.addEventListener('click', () => {
+  openPopup(avatarPopup)
+})
 
 profileForm && profileForm.addEventListener('submit', submitProfile)
+
+//редактирование аватарки
+avatarForm && avatarForm.addEventListener('submit', editAvatar)
 
 /** 
  * добавление карточек
  */
-addCards(initialCards)
+
+//загрузка карточек с сервера
+getAllCards()
 
 
 /**
@@ -63,6 +67,7 @@ addCards(initialCards)
  */
 
 const popupButtons = document.querySelectorAll('.p__button')
+
 popupButtons.forEach((pButton) => {
   if (!pButton.dataset.target) {
     console.log('на кнопке отсутствует data атрибут target')
@@ -76,9 +81,11 @@ popupButtons.forEach((pButton) => {
 
   // закрыть по иконке
   closeByIcon(popup)
+  closeByIcon(avatarPopup) ///?
 
   //закрыть по оверлей
   closeByOverlay(popup)
+  closeByOverlay(avatarPopup)///?
 })
 
 /**
@@ -96,15 +103,24 @@ function submitProfile(event) {
 
   event.preventDefault()
 
-  const profileNameValue = profileForm['profile-name']
-  const profileProfessionValue = profileForm['profile-profession']
+  const name = profileForm['profile-name'].value
+  const about = profileForm['profile-profession'].value
+  const profileName = document.querySelector('.profile__name')
+  const profileProfession = document.querySelector('.profile__profession')
+  const body = JSON.stringify({ name, about })
 
-  profileName.innerText = profileNameValue.value
-  profileProfession.innerText = profileProfessionValue.value
-
-  closePopup(profilePopup)
-
+  editMyProfile(body)
+    .then((body) => {
+      profileName.innerText = body.name
+      profileProfession.innerText = body.about
+      closePopup(profilePopup)
+      event.target.reset()
+    })
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
 }
+
+
+
 
 // валидация форм
 
@@ -118,6 +134,25 @@ enableValidation({
 });
 
 
+//загрузка информации о пользователе с сервера
+fetch('https://mesto.nomoreparties.co/v1/plus-cohort-20/users/me', {
+  headers: {
+    authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262'
+  },
+  method: 'GET'
+})
+  .then(res => res.json())
+  .then((result) => {
+    const getAvatar = document.querySelector('.profile__avatar')// вынести потом в константы
+    const getProfileName = document.querySelector('.profile__name')
+    const getProfileAbout = document.querySelector('.profile__profession')
 
+    getAvatar.src = result.avatar
+    getProfileName.innerHTML = result.name
+    getProfileAbout.innerHTML = result.about
+    userId = result._id
 
+    console.log(result); //удалить потом
+  })
+  .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
 
