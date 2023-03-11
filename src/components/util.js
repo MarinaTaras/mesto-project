@@ -1,37 +1,21 @@
-// импорт функций работы модальных окон
-import { getInitialCards } from "./api";
-import { closeByEsc } from "./modal"
-import { addCards } from "./card"
-
+import { closePopup } from "./modal"
 
 /**
- * универсальный метод закрытия окна
+ * Универсальная функция закрытия попапов
  */
-export function closePopup(popup) {
-  popup.classList.remove('popup_opened')
-  document.removeEventListener('keydown', closeByEsc);
+
+const popups = document.querySelectorAll('.popup')
+
+export function closePopups() {
+  popups.forEach((popup) => {
+    popup.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup_opened')) {
+        closePopup(popup)
+      }
+      if (evt.target.classList.contains('popup__close-icon')) {
+        closePopup(popup)
+      }
+    })
+  })
 }
-
-/**
- * универсальный метод открытия окна
- */
-export function openPopup(popup) {
-  popup.classList.add('popup_opened')
-  document.addEventListener('keydown', closeByEsc);
-}
-
-/**
- * Запрос всех карточек с обработкой ошибок
- */
-export function getAllCards() {
-  getInitialCards()
-    .then(addCards)
-    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
-}
-
-
-
-
-
-
 

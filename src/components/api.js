@@ -4,20 +4,24 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
+function getResponseData(res) {
+  if (res.ok) return res.json()
+  return Promise.reject(res.status)
+}
+
 /**
  * Получение списка карточек 
  */
-export const getInitialCards = () => {
-
+export const getInitialCards = (body) => {
   const options = {
     method: 'GET',
-    headers
+    headers,
+    body
   }
 
   return fetch(HTTP, options)
     .then(res => {
-      if (res.ok) return res.json()
-      return Promise.reject(res.status)
+      return getResponseData(res)
     })
 }
 
@@ -35,8 +39,7 @@ export const postNewCard = (body) => {
 
   return fetch(HTTP, options)
     .then(res => {
-      if (res.ok) return res.json()
-      return Promise.reject(res.status)
+      return getResponseData(res)
     })
 }
 
@@ -52,8 +55,7 @@ export const deleteMyCard = (data) => {
 
   return fetch(HTTP, options)
     .then(res => {
-      if (res.ok) return res.json()
-      return Promise.reject(res.status)
+      return getResponseData(res)
     })
 }
 
@@ -69,8 +71,7 @@ export const addMyLike = (data) => {
 
   return fetch(HTTP, options)
     .then(res => {
-      if (res.ok) return res.json()
-      return Promise.reject(res.status)
+      return getResponseData(res)
     })
 }
 
@@ -85,8 +86,7 @@ export const deleteMyLike = (data) => {
   }
   return fetch(HTTP, options)
     .then(res => {
-      if (res.ok) return res.json()
-      return Promise.reject(res.status)
+      return getResponseData(res)
     })
 }
 
@@ -104,8 +104,7 @@ export const editMyAvatar = (avatar) => {
   }
   return fetch('https://mesto.nomoreparties.co/v1/plus-cohort-20/users/me/avatar', options)
     .then(res => {
-      if (res.ok) return res.json()
-      return Promise.reject(res.status)
+      return getResponseData(res)
     })
 }
 
@@ -120,8 +119,18 @@ export const editMyProfile = (body) => {
   }
   return fetch('https://mesto.nomoreparties.co/v1/plus-cohort-20/users/me', options)
     .then(res => {
-      if (res.ok) return res.json()
-      return Promise.reject(res.status)
+      return getResponseData(res)
     })
 }
 
+//загрузка информации о пользователе с сервера
+export const getUserInfo = () => {
+  const options = {
+    method: 'GET',
+    headers
+  }
+  return fetch('https://mesto.nomoreparties.co/v1/plus-cohort-20/users/me', options)
+    .then(res => {
+      return getResponseData(res)
+    })
+}

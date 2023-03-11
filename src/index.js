@@ -1,11 +1,12 @@
 import './pages/index.css'
-import { closePopup, getAllCards, openPopup } from './components/util'
 // импорт функции валидации
 import { enableValidation } from "./components/validate.js"
 // импорт функций работы модальных окон
-import { closeByOverlay, closeByIcon, closeByEsc } from "./components/modal"
+import { closePopup, openPopup } from "./components/modal"
 import { avatarForm, editAvatar } from './components/avatar'
-import { editMyProfile } from './components/api'
+import { editMyProfile, getInitialCards, getUserInfo } from './components/api'
+import { addCards } from './components/card'
+import { closePopups } from './components/util'
 
 // POPUPS
 // окно формы профиля
@@ -14,6 +15,8 @@ const profilePopup = document.querySelector('.popup__profile')
 const mestoPopup = document.querySelector('.popup__mesto')
 // окно редактирования аватара
 export const avatarPopup = document.querySelector('.popup__avatar')
+
+export let userId
 
 // КНОПКИ ОТКРЫТИЯ ПОПАПОВ
 const profileButton = document.getElementById('infobutton')
@@ -25,12 +28,12 @@ const editAvatarButton = document.getElementById('editbutton')
 const profileForm = document.forms['profile']
 
 // ПОЛЯ ПРОФИЛЯ
+//аватар
+const avatar = document.querySelector('.profile__avatar')
 // имя профиля в шапке
 const profileName = document.querySelector('.profile__name')
 // профессия профиля в шапке
 const profileProfession = document.querySelector('.profile__profession')
-
-export let userId
 
 // функции
 
@@ -54,39 +57,7 @@ profileForm && profileForm.addEventListener('submit', submitProfile)
 //редактирование аватарки
 avatarForm && avatarForm.addEventListener('submit', editAvatar)
 
-/** 
- * добавление карточек
- */
-
-//загрузка карточек с сервера
-getAllCards()
-
-
-/**
- * Универсальная функция закрытия попапов
- */
-
-const popupButtons = document.querySelectorAll('.p__button')
-
-popupButtons.forEach((pButton) => {
-  if (!pButton.dataset.target) {
-    console.log('на кнопке отсутствует data атрибут target')
-    return
-  }
-
-  const popup = document.getElementById(pButton.dataset.target)
-  if (!popup) {
-    return
-  }
-
-  // закрыть по иконке
-  closeByIcon(popup)
-  closeByIcon(avatarPopup) ///?
-
-  //закрыть по оверлей
-  closeByOverlay(popup)
-  closeByOverlay(avatarPopup)///?
-})
+closePopups()
 
 /**
  * Подготовка данных для профиля
@@ -105,22 +76,22 @@ function submitProfile(event) {
 
   const name = profileForm['profile-name'].value
   const about = profileForm['profile-profession'].value
-  const profileName = document.querySelector('.profile__name')
-  const profileProfession = document.querySelector('.profile__profession')
   const body = JSON.stringify({ name, about })
+  const form = event.target
+  const button = form.querySelector('.popup__button')
+  button.textContent = "Сохранение..."
 
   editMyProfile(body)
     .then((body) => {
       profileName.innerText = body.name
       profileProfession.innerText = body.about
       closePopup(profilePopup)
-      event.target.reset()
     })
-    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+    .finally(() => {
+      button.textContent = "Сохранить"
+    })
 }
-
-
-
 
 // валидация форм
 
@@ -134,25 +105,34 @@ enableValidation({
 });
 
 
-//загрузка информации о пользователе с сервера
-fetch('https://mesto.nomoreparties.co/v1/plus-cohort-20/users/me', {
-  headers: {
-    authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262'
-  },
-  method: 'GET'
-})
-  .then(res => res.json())
-  .then((result) => {
-    const getAvatar = document.querySelector('.profile__avatar')// вынести потом в константы
-    const getProfileName = document.querySelector('.profile__name')
-    const getProfileAbout = document.querySelector('.profile__profession')
 
-    getAvatar.src = result.avatar
-    getProfileName.innerHTML = result.name
-    getProfileAbout.innerHTML = result.about
-    userId = result._id
+function createUser(result) {
+  avatar.src = result.avatar
+  profileName.innerHTML = result.name
+  profileProfession.innerHTML = result.about
+  userId = result._id
+}
 
-    console.log(result); //удалить потом
+
+// Старт
+
+export function appStart() {
+  Promise.all([
+    getUserInfo(),
+    getInitialCards()
+  ]).then(res => {
+    const userInfo = res[0]
+    const cards = res[1]
+    createUser(userInfo)
+    addCards(cards)
   })
-  .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
+}
+
+appStart()
+
+
+
+
+
 

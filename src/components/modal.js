@@ -1,29 +1,23 @@
-// импорт функций
-import { closePopup } from "../components/util"
-
-//константы
-
 
 // функции модальных окон
+/**
+ * универсальный метод открытия окна
+ */
+export function openPopup(popup) {
+  popup.classList.add('popup_opened')
+  document.addEventListener('keydown', closeByEsc);
+}
+
 /**
  *  Варианты закрытия окна
 */
 
-// закрытие при клике по оверлей
-export function closeByOverlay(popup) {
-  if (popup.className.includes('overlay')) {
-    popup.addEventListener('click', (e) => {
-      if (e.target === popup) {
-        closePopup(popup)
-      }
-    })
-  }
-}
-
-// закрытие при клике на иконку (крест)
-export function closeByIcon(popup) {
-  const close = popup.querySelector('.close')
-  close.addEventListener('click', () => closePopup(popup))
+/**
+ * универсальный метод закрытия окна
+ */
+export function closePopup(popup) {
+  popup.classList.remove('popup_opened')
+  document.removeEventListener('keydown', closeByEsc);
 }
 
 // закрытие при клике на Esc

@@ -1,10 +1,9 @@
 import { userId } from ".."
 import { addMyLike, deleteMyCard, deleteMyLike, postNewCard } from "./api"
-import { closeByIcon, closeByOverlay } from "./modal"
-import { closePopup, getAllCards, openPopup } from "./util.js"
+import { closePopup, openPopup } from "./modal"
 
 //константы
-const addCardPopup = document.querySelector('.popup__mesto')
+const CardPopup = document.querySelector('.popup__mesto')
 const mestoForm = document.forms['mesto-form']
 
 //блок картинка
@@ -15,23 +14,22 @@ const bigImageText = popupImage.querySelector('.popup__text')
 // раздел для отображения карточек
 const elements = document.querySelector('.elements')
 
+//создание карточек
+const cardTemp = document.getElementById('templ-element')
+
 //события
-closeByIcon(popupImage)
-closeByOverlay(popupImage)
 
 mestoForm && mestoForm.addEventListener('submit', addNewCard)
 
 /**
  * Подготовка данных для картинки в отдельном окне
  */
-function getImageData(target) {
-  if (target.className.includes('element__image')) {
-    const link = target.src
-    const caption = target.alt
-    bigImage.src = link
-    bigImageText.innerText = caption
-    bigImage.alt = caption
-  }
+function setImageData(target) {
+  const link = target.src
+  const caption = target.alt
+  bigImage.src = link
+  bigImageText.textContent = caption
+  bigImage.alt = caption
 }
 
 /**
@@ -47,20 +45,20 @@ export function addCards(initialCards) {
  * Верстка отдельной карточки 
  */
 function createCard(data) {
-  const cardTemp = document.getElementById('templ-element').cloneNode(true)
-  const card = cardTemp.content.querySelector('div')
+  const cardClone = cardTemp.cloneNode(true)
+  const card = cardClone.content.querySelector('div')
   const trash = card.querySelector('.element__trash')
 
   if (userId !== data.owner._id) trash.remove()
-
+  
   const image = card.querySelector('.element__image')
   const caption = card.querySelector('.element__text')
   const likeBtn = card.querySelector('.element__like')
   const likeCount = card.querySelector('.element__like-count')
   image.src = data.link
   image.alt = data.name
-  caption.innerText = data.name
-  likeCount.innerText = data.likes.length
+  caption.textContent = data.name
+  likeCount.textContent = data.likes.length
 
   if (isLiked(data)) {
     likeBtn.classList.add('element__like_active')
@@ -105,9 +103,9 @@ function createCardListeners(card, image, data) {
     }
   }
 
-  const openCard = (e) => {
-    e.stopPropagation()
-    getImageData(e.target)
+  const openCard = (data) => {
+    data.stopPropagation()
+    setImageData(data.target)
     openPopup(popupImage)
   }
 
@@ -118,7 +116,9 @@ function createCardListeners(card, image, data) {
     likeBtn.removeEventListener('click', toggleLike)
     delBtn && delBtn.removeEventListener('click', deleteCard)
 
-    deleteMyCard(data).then(() => card.remove())
+    deleteMyCard(data)
+      .then(() => card.remove())
+      .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
 
   }
 
@@ -146,13 +146,18 @@ function addNewCard(event) {
   const name = mestoForm['mesto-name'].value
   const link = mestoForm['mesto-link'].value
   const body = JSON.stringify({ name, link })
+  const form = event.target
+  const button = form.querySelector('.popup__button')
+  button.textContent = "Сохранение..."
 
   postNewCard(body)
     .then((result) => {
       addCards([result])
-      closePopup(addCardPopup)
+      closePopup(CardPopup)
       event.target.reset()
     })
-    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
-
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+    .finally(() => {
+      button.textContent = "Сохранить"
+    })
 }
