@@ -1,5 +1,5 @@
 import { avatarPopup } from ".."
-import { editMyAvatar } from "./api"
+import { editMyAvatar } from "./api-old"
 import { closePopup } from "./modal"
 
 const profAvatar = document.querySelector('.profile__avatar')

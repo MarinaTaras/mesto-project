@@ -1,5 +1,5 @@
 import { userId } from ".."
-import { addMyLike, deleteMyCard, deleteMyLike, postNewCard } from "./api"
+import { addMyLike, deleteMyCard, deleteMyLike, postNewCard } from "./api-old"
 import { closePopup, openPopup } from "./modal"
 
 //константы

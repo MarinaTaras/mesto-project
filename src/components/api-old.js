@@ -3,27 +3,27 @@ const headers = {
   authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
   'Content-Type': 'application/json'
 }
-
+/*
 function getResponseData(res) {
   if (res.ok) return res.json()
   return Promise.reject(res.status)
-}
+}*/
 
 /**
  * Получение списка карточек 
  */
-export const getInitialCards = (body) => {
+/*export const getInitialCards = (body) => {
   const options = {
     method: 'GET',
     headers,
     body
-  }
+  }*/
 
-  return fetch(HTTP, options)
+/*  return fetch(HTTP, options)
     .then(res => {
       return getResponseData(res)
     })
-}
+}*/
 
 
 /**
