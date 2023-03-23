@@ -1,6 +1,19 @@
+<<<<<<< HEAD
 import { userId } from ".."
 import { addMyLike, deleteMyCard, deleteMyLike, postNewCard } from "./api"
+=======
+import { userId } from "../utils/constants";
+>>>>>>> 4a17cad749fd92690863132bdbd16c172c0745ef
 import { closePopup, openPopup } from "./modal"
+
+import Api from './api.js';
+const api = new Api({
+  baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-20',
+  headers: {
+    authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
+    'Content-Type': 'application/json'
+  }
+});
 
 //константы
 const CardPopup = document.querySelector('.popup__mesto')
@@ -84,7 +97,7 @@ function createCardListeners(card, image, data) {
 
     if (isLiked(data)) {
 
-      deleteMyLike(data)
+      api.deleteLikeCard(data._id)
         .then((card) => {
           event.target.classList.remove('element__like_active')
           likeCount.innerText = card.likes.length
@@ -93,7 +106,7 @@ function createCardListeners(card, image, data) {
         .catch(e => console.log(e))
     } else {
 
-      addMyLike(data)
+      api.addLikeCard(data._id)
         .then((card) => {
           event.target.classList.add('element__like_active')
           likeCount.innerText = card.likes.length
@@ -116,7 +129,7 @@ function createCardListeners(card, image, data) {
     likeBtn.removeEventListener('click', toggleLike)
     delBtn && delBtn.removeEventListener('click', deleteCard)
 
-    deleteMyCard(data)
+    api.deleteCard(data._id)
       .then(() => card.remove())
       .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
 
@@ -145,12 +158,11 @@ function addNewCard(event) {
   event.preventDefault()
   const name = mestoForm['mesto-name'].value
   const link = mestoForm['mesto-link'].value
-  const body = JSON.stringify({ name, link })
   const form = event.target
   const button = form.querySelector('.popup__button')
   button.textContent = "Сохранение..."
 
-  postNewCard(body)
+  api.addCard(name, link)
     .then((result) => {
       addCards([result])
       closePopup(CardPopup)

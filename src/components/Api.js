@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const HTTP = 'https://mesto.nomoreparties.co/v1/plus-cohort-20/cards'
 const headers = {
   authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
@@ -133,4 +134,99 @@ export const getUserInfo = () => {
     .then(res => {
       return getResponseData(res)
     })
+=======
+export default class Api {
+    constructor({baseUrl, headers}) {
+        this._requestBaseUrl = baseUrl;
+        this._requestHeaders = headers;
+    }
+
+    _checkResponseData(res) {
+        if (res.ok)
+            return res.json()
+        return Promise.reject(`Ошибка: ${res.status}`);
+    }
+
+    getUserInfo() {
+        return fetch(this._requestBaseUrl + '/users/me', { headers: this._requestHeaders })
+            .then(res => {
+                return this._checkResponseData(res)
+            })
+    }
+
+    getInitialCards() {
+        return fetch(this._requestBaseUrl + '/cards', { headers: this._requestHeaders })
+            .then(res => {
+                return this._checkResponseData(res)
+            })
+    }
+
+    addCard(cardName, cardLink) {
+        return fetch(this._requestBaseUrl + '/cards', {
+                method: 'POST',
+                headers: this._requestHeaders,
+                body: JSON.stringify({
+                    name: cardName,
+                    link: cardLink
+                })
+            })
+            .then(res => {
+                return this._checkResponseData(res)
+            })
+    }
+
+    deleteCard(cardId) {
+        return fetch(this._requestBaseUrl + `/cards/${cardId}`, { headers: this._requestHeaders })
+            .then(res => {
+                return this._checkResponseData(res)
+            })
+    }
+
+    addLikeCard(cardId) {
+        return fetch(this._requestBaseUrl + `/cards/likes/${cardId}`, {
+            method: 'PUT',
+            headers: this._requestHeaders
+            })
+            .then(res => {
+                return this._checkResponseData(res)
+            })
+    }
+
+    deleteLikeCard(cardId) {
+        return fetch(this._requestBaseUrl + `/cards/likes/${cardId}`, {
+            method: 'DELETE',
+            headers: this._requestHeaders
+        })
+        .then(res => {
+            return this._checkResponseData(res)
+        })
+    }
+
+    editUserAvatar(avatarUrl) {
+        return fetch(this._requestBaseUrl + `/users/me/avatar`, {
+                method: 'PATCH',
+                headers: this._requestHeaders,
+                body: JSON.stringify({
+                    avatar: avatarUrl
+                })
+            })
+            .then(res => {
+                return this._checkResponseData(res)
+            })
+    }
+
+    editUserProfile(userName, userDescription) {
+        return fetch(this._requestBaseUrl +'/users/me', {
+            method: 'PATCH',
+            headers: this._requestHeaders,
+            body: JSON.stringify({
+                name: userName,
+                about: userDescription
+            })
+        })
+        .then(res => {
+            return this._checkResponseData(res)
+        })
+    }
+>>>>>>> 4a17cad749fd92690863132bdbd16c172c0745ef
 }

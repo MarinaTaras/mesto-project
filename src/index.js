@@ -4,40 +4,20 @@ import { enableValidation } from "./components/validate.js"
 // импорт функций работы модальных окон
 import { closePopup, openPopup } from "./components/modal"
 import { avatarForm, editAvatar } from './components/avatar'
-import { editMyProfile, getInitialCards, getUserInfo } from './components/api'
 import { addCards } from './components/card'
 import { closePopups } from './components/util'
+import {profileButton, profilePopup, avatar, profileName, avatarPopup, mestoPopup, profileForm,
+  profileProfession, userId, editAvatarButton, addCardButton} from "./utils/constants";
 
-// POPUPS
-// окно формы профиля
-const profilePopup = document.querySelector('.popup__profile')
-// окно формы добпвления карточи 
-const mestoPopup = document.querySelector('.popup__mesto')
-// окно редактирования аватара
-export const avatarPopup = document.querySelector('.popup__avatar')
 
-export let userId
-
-// КНОПКИ ОТКРЫТИЯ ПОПАПОВ
-const profileButton = document.getElementById('infobutton')
-const addCardButton = document.getElementById('addbutton')
-const editAvatarButton = document.getElementById('editbutton')
-
-// ФОРМЫ 
-// редактирование профиля
-const profileForm = document.forms['profile']
-
-// ПОЛЯ ПРОФИЛЯ
-//аватар
-const avatar = document.querySelector('.profile__avatar')
-// имя профиля в шапке
-const profileName = document.querySelector('.profile__name')
-// профессия профиля в шапке
-const profileProfession = document.querySelector('.profile__profession')
-
-// функции
-
-// добавим события
+import Api from './components/api.js';
+const api = new Api({
+  baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-20',
+  headers: {
+    authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
+    'Content-Type': 'application/json'
+  }
+});
 
 profileButton.addEventListener('click', () => {
   getProfileData()
@@ -76,12 +56,11 @@ function submitProfile(event) {
 
   const name = profileForm['profile-name'].value
   const about = profileForm['profile-profession'].value
-  const body = JSON.stringify({ name, about })
   const form = event.target
   const button = form.querySelector('.popup__button')
   button.textContent = "Сохранение..."
 
-  editMyProfile(body)
+  api.editUserProfile(name, about)
     .then((body) => {
       profileName.innerText = body.name
       profileProfession.innerText = body.about
@@ -117,9 +96,10 @@ function createUser(result) {
 // Старт
 
 export function appStart() {
+  console.log(api);
   Promise.all([
-    getUserInfo(),
-    getInitialCards()
+    api.getUserInfo(),
+    api.getInitialCards()
   ]).then(res => {
     const userInfo = res[0]
     const cards = res[1]
