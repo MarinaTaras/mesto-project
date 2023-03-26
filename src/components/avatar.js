@@ -1,20 +1,16 @@
-<<<<<<< HEAD
-import { avatarPopup } from ".."
-import { editMyAvatar } from "./api"
-=======
+import { avatarPopup } from "../utils/constants"
+import { editMyAvatar } from "./Api"
 // This file should be deleted, temporary solution
 
-import { avatarPopup} from "../utils/constants";
->>>>>>> 4a17cad749fd92690863132bdbd16c172c0745ef
 import { closePopup } from "./modal"
-import Api from './api.js';
-const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-20',
-  headers: {
-    authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
-    'Content-Type': 'application/json'
-  }
-});
+import api from './Api.js';
+// const api = new Api({
+//   baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-20',
+//   headers: {
+//     authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
+//     'Content-Type': 'application/json'
+//   }
+// });
 
 const profAvatar = document.querySelector('.profile__avatar')
 

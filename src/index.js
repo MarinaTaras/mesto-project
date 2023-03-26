@@ -6,18 +6,22 @@ import { closePopup, openPopup } from "./components/modal"
 import { avatarForm, editAvatar } from './components/avatar'
 import { addCards } from './components/card'
 import { closePopups } from './components/util'
-import {profileButton, profilePopup, avatar, profileName, avatarPopup, mestoPopup, profileForm,
-  profileProfession, userId, editAvatarButton, addCardButton} from "./utils/constants";
+import {profileButton, profilePopup, avatar, 
+profileName, avatarPopup, mestoPopup, profileForm,
+  profileProfession, 
+  editAvatarButton, addCardButton} from "./utils/constants";
 
+import api from './components/Api.js';
 
-import Api from './components/api.js';
-const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-20',
-  headers: {
-    authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
-    'Content-Type': 'application/json'
-  }
-});
+// const api = new Api({
+//   baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-20',
+//   headers: {
+//     authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
+//     'Content-Type': 'application/json'
+//   }
+// });
+
+let userId
 
 profileButton.addEventListener('click', () => {
   getProfileData()
@@ -84,7 +88,6 @@ enableValidation({
 });
 
 
-
 function createUser(result) {
   avatar.src = result.avatar
   profileName.innerHTML = result.name
@@ -92,11 +95,9 @@ function createUser(result) {
   userId = result._id
 }
 
-
 // Старт
 
-export function appStart() {
-  console.log(api);
+function appStart() {
   Promise.all([
     api.getUserInfo(),
     api.getInitialCards()
@@ -111,8 +112,4 @@ export function appStart() {
 
 appStart()
 
-
-
-
-
-
+export { userId }
