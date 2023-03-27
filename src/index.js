@@ -1,26 +1,28 @@
 import './pages/index.css'
-// импорт функции валидации
-import { enableValidation } from "./components/validate.js"
-// импорт функций работы модальных окон
-import { closePopup, openPopup } from "./components/modal"
-import { avatarForm, editAvatar } from './components/avatar'
-import { addCards } from './components/card'
-import { closePopups } from './components/util'
-import {profileButton, profilePopup, avatar, 
-profileName, avatarPopup, mestoPopup, profileForm,
-  profileProfession, 
-  editAvatarButton, addCardButton} from "./utils/constants";
+import Api from './components/Api.js';
+import UserInfo from './components/UserInfo.js';
+import {BASE_URL, TOKEN, profileName, profileProfession} from './utils/constants';
 
-import api from './components/Api.js';
+const api = new Api({
+  baseUrl: BASE_URL,
+  headers: {
+    authorization: TOKEN,
+    'Content-Type': 'application/json'
+  }
+});
 
-// const api = new Api({
-//   baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-20',
-//   headers: {
-//     authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
-//     'Content-Type': 'application/json'
-//   }
-// });
+const userInfo = new UserInfo({userName: profileName, userData: profileProfession},
+    {getUserInfo: api.getUserInfo.bind(api), setUserInfo: api.editUserProfile.bind(api)});
 
+
+const info = userInfo.getUserInfo()
+    .then((info) => {
+      userInfo.setUserInfo(info);
+    })
+    .catch(() => console.log('Fail get and set userInfo'))
+
+
+/*
 let userId
 
 profileButton.addEventListener('click', () => {
@@ -43,17 +45,17 @@ avatarForm && avatarForm.addEventListener('submit', editAvatar)
 
 closePopups()
 
-/**
+/!**
  * Подготовка данных для профиля
- */
+ *!/
 function getProfileData() {
   profileForm['profile-name'].value = profileName.innerText
   profileForm['profile-profession'].value = profileProfession.innerText
 }
 
-/**
+/!**
  * Submit формы профиля
- */
+ *!/
 function submitProfile(event) {
 
   event.preventDefault()
@@ -113,3 +115,4 @@ function appStart() {
 appStart()
 
 export { userId }
+*/

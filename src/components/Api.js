@@ -1,20 +1,19 @@
-import { BASE_URL, TOKEN } from "../utils/constants"
-
-class Api {
+export default class Api {
     constructor({baseUrl, headers}) {
         this._requestBaseUrl = baseUrl;
         this._requestHeaders = headers;
     }
 
     _checkResponseData(res) {
-        if (res.ok) return res.json()
+        if (res.ok)
+            return res.json()
         return Promise.reject(`Ошибка: ${res.status}`);
     }
 
     getUserInfo() {
         return fetch(this._requestBaseUrl + '/users/me', { headers: this._requestHeaders })
             .then(res => {
-                return this._checkResponseData(res)
+                return this._checkResponseData(res);
             })
     }
 
@@ -95,13 +94,3 @@ class Api {
         })
     }
 }
-
-const api = new Api({
-  baseUrl: BASE_URL,
-  headers: {
-    authorization: TOKEN,
-    'Content-Type': 'application/json'
-  }
-});
-
-export default api
