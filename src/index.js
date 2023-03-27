@@ -3,7 +3,7 @@ import Api from './components/Api.js';
 import UserInfo from './components/UserInfo.js';
 import Section from './components/Section.js';
 import Card from './components/Сard';
-import {BASE_URL, TOKEN, profileName, profileProfession, cardSection} from './utils/constants';
+import {BASE_URL, TOKEN, profileName, profileProfession, cardSection, avatar} from './utils/constants';
 
 const api = new Api({
   baseUrl: BASE_URL,
@@ -13,8 +13,23 @@ const api = new Api({
   }
 });
 
-const userInfo = new UserInfo({userName: profileName, userData: profileProfession},
-    {getUserInfo: api.getUserInfo.bind(api), setUserInfo: api.editUserProfile.bind(api)});
+// Обработчики событий карточки
+const cardHandlers = {
+    apiDeleteLikeCard: api.deleteLikeCard.bind(api),
+    apiAddLikeCard: api.addLikeCard.bind(api),
+    apiDeleteCard: api.deleteCard.bind(api)
+}
+
+// Обработчики событий профиля
+const userProfileHandlers = {
+    getUserInfo: api.getUserInfo.bind(api),
+    setUserInfo: api.editUserProfile.bind(api),
+    updateAvatar: api.editUserAvatar.bind(api)
+}
+
+// Загрузка данных пользователя
+const userInfo = new UserInfo({userName: profileName, userData: profileProfession, userAvatar: avatar},
+    userProfileHandlers);
 
 let userId = 123456789;
 const info = userInfo.getUserInfo()
@@ -25,14 +40,7 @@ const info = userInfo.getUserInfo()
     .catch(() => console.log('Fail get and set userInfo'))
 
 
-// Обработчики событий карточки
-const cardHandlers = {
-    apiDeleteLikeCard: api.deleteLikeCard.bind(api),
-    apiAddLikeCard: api.addLikeCard.bind(api),
-    apiDeleteCard: api.deleteCard.bind(api)
-}
 // Загрузка начальных карточек
-
 api.getInitialCards()
     .then((cards) => {
         const cardsList = new Section({
