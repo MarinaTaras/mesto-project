@@ -1,6 +1,7 @@
 import './pages/index.css'
 import Api from './components/Api.js';
 import UserInfo from './components/UserInfo.js';
+import Section from './components/Section.js';
 import {BASE_URL, TOKEN, profileName, profileProfession} from './utils/constants';
 
 const api = new Api({
