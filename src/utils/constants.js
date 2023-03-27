@@ -7,6 +7,7 @@ export const mestoPopup = document.querySelector('.popup__mesto')
 export const avatarPopup = document.querySelector('.popup__avatar')
 
 // блок картинок
+export const cardSection = document.querySelector('.elements')
 export const popupImage = document.querySelector('.popup__image')
 export const bigImage = popupImage.querySelector('.popup__bigimage')
 export const bigImageText = popupImage.querySelector('.popup__text')
@@ -41,3 +42,4 @@ export const validatorOptions = {
   inputErrorClass: 'popup__item_error',
   errorClass: 'popup__span_error-active'
 }
+

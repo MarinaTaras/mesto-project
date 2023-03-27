@@ -2,9 +2,8 @@ import './pages/index.css'
 import Api from './components/Api.js';
 import UserInfo from './components/UserInfo.js';
 import Section from './components/Section.js';
-import {BASE_URL, TOKEN, profileName, profileProfession} from './utils/constants';
 import Card from './components/Сard';
-
+import {BASE_URL, TOKEN, profileName, profileProfession, cardSection} from './utils/constants';
 
 const api = new Api({
   baseUrl: BASE_URL,
@@ -17,16 +16,43 @@ const api = new Api({
 const userInfo = new UserInfo({userName: profileName, userData: profileProfession},
     {getUserInfo: api.getUserInfo.bind(api), setUserInfo: api.editUserProfile.bind(api)});
 
-
+let userId = 123456789;
 const info = userInfo.getUserInfo()
     .then((info) => {
-      userInfo.setUserInfo(info);
+        userId = info._id;
+        userInfo.setUserInfo(info);
     })
     .catch(() => console.log('Fail get and set userInfo'))
 
 
-//создание карточки
-const elements = document.querySelector('.elements')
+// Обработчики событий карточки
+const cardHandlers = {
+    apiDeleteLikeCard: api.deleteLikeCard.bind(api),
+    apiAddLikeCard: api.addLikeCard.bind(api),
+    apiDeleteCard: api.deleteCard.bind(api)
+}
+// Загрузка начальных карточек
+
+api.getInitialCards()
+    .then((cards) => {
+        const cardsList = new Section({
+                items: cards,
+                renderer: (item) => {
+                    const card = new Card(item, '.template__element', cardHandlers, userId)
+                    const cardElement = card.generate();
+
+                    cardsList.addItem(cardElement);
+                },
+            },
+            cardSection
+        );
+        cardsList.renderItems();
+    })
+    .catch(() => console.log('Fail get initial cards'))
+
+
+// Пример создания карточки
+/*const elements = document.querySelector('.elements')
 const cardLink = 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1530&q=80'
 const cardHandlers = {
   apiDeleteLikeCard: api.deleteLikeCard.bind(api),
@@ -49,7 +75,7 @@ const practicumObj = {
   }
 
 const card = new Card(practicumObj, '.template__element', cardHandlers, 456)
-elements.prepend(card.generate())
+elements.prepend(card.generate())*/
 
 
 /*
