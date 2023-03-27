@@ -1,6 +1,7 @@
 import './pages/index.css'
 import Api from './components/Api.js';
 import UserInfo from './components/UserInfo.js';
+import Section from './components/Section.js';
 import {BASE_URL, TOKEN, profileName, profileProfession} from './utils/constants';
 
 const api = new Api({
@@ -24,27 +25,20 @@ const info = userInfo.getUserInfo()
 
 /*
 let userId
-
 profileButton.addEventListener('click', () => {
   getProfileData()
   openPopup(profilePopup)
 })
-
 addCardButton.addEventListener('click', () => {
   openPopup(mestoPopup)
 })
-
 editAvatarButton.addEventListener('click', () => {
   openPopup(avatarPopup)
 })
-
 profileForm && profileForm.addEventListener('submit', submitProfile)
-
 //редактирование аватарки
 avatarForm && avatarForm.addEventListener('submit', editAvatar)
-
 closePopups()
-
 /!**
  * Подготовка данных для профиля
  *!/
@@ -52,20 +46,16 @@ function getProfileData() {
   profileForm['profile-name'].value = profileName.innerText
   profileForm['profile-profession'].value = profileProfession.innerText
 }
-
 /!**
  * Submit формы профиля
  *!/
 function submitProfile(event) {
-
   event.preventDefault()
-
   const name = profileForm['profile-name'].value
   const about = profileForm['profile-profession'].value
   const form = event.target
   const button = form.querySelector('.popup__button')
   button.textContent = "Сохранение..."
-
   api.editUserProfile(name, about)
     .then((body) => {
       profileName.innerText = body.name
@@ -77,9 +67,7 @@ function submitProfile(event) {
       button.textContent = "Сохранить"
     })
 }
-
 // валидация форм
-
 enableValidation({
   formSelector: '.popup__form',
   inputSelector: '.popup__item',
@@ -88,17 +76,13 @@ enableValidation({
   inputErrorClass: 'popup__item_error',
   errorClass: 'popup__span_error-active'
 });
-
-
 function createUser(result) {
   avatar.src = result.avatar
   profileName.innerHTML = result.name
   profileProfession.innerHTML = result.about
   userId = result._id
 }
-
 // Старт
-
 function appStart() {
   Promise.all([
     api.getUserInfo(),
@@ -111,8 +95,6 @@ function appStart() {
   })
     .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
 }
-
 appStart()
-
 export { userId }
 */
