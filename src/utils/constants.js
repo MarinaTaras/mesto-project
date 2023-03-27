@@ -17,6 +17,9 @@ export const profileButton = document.getElementById('infobutton')
 export const addCardButton = document.getElementById('addbutton')
 export const editAvatarButton = document.getElementById('editbutton')
 
+// ОБЩИЕ КОНСТАНТЫ ДЛЯ ВСЕХ ПОПАПОВ
+export const popups = document.querySelectorAll('.popup')
+
 // ФОРМЫ
 // редактирование профиля
 export const profileForm = document.forms['profile']
