@@ -1,10 +1,6 @@
-import { userId } from "..";
-import { popupImage } from "../utils/constants";
-import api from "./Api";
 
-
-export class Card {
-  constructor(cardData, selector) {
+export default class Card {
+  constructor(cardData, selector, cardHandlers, userId) {
     this._name = cardData.name;
     this._link = cardData.link;
     this._cardId = cardData._id;
@@ -16,6 +12,12 @@ export class Card {
     this._handleClickLikeBtn = this._handleClickLikeBtn.bind(this)
     this._handleClickTrashBtn = this._handleClickTrashBtn.bind(this)
     //this._handleCardClick = this._handleCardClick.bind(this) // потребуется, когда свяжем класс с попапом
+
+    this._apiDeleteLikeCard = cardHandlers.apiDeleteLikeCard
+    this._apiAddLikeCard = cardHandlers.apiAddLikeCard
+    this._apiDeleteCard = cardHandlers.apiDeleteCard
+
+    this._userId = userId
   }
 
   _getElement() {
@@ -36,7 +38,7 @@ export class Card {
 
   _setElementData() {  // заполняем данными
     this.trash = this._element.querySelector('.element__trash')
-    if (userId !== this._owner._id) this.trash.remove()
+    if (this._userId !== this._owner._id) this.trash.remove()
     const image = this._element.querySelector('.element__image')
     const caption = this._element.querySelector('.element__text')
     this.likeBtn = this._element.querySelector('.element__like')
@@ -56,7 +58,7 @@ export class Card {
   // ставим лайки
   _handleClickLikeBtn(event) {
     if (this._isLiked()) {
-      api.deleteLikeCard(this._cardId)
+      this._apiDeleteLikeCard(this._cardId)
         .then((card) => {
           event.target.classList.remove('element__like_active')
           this.likeCount.innerText = card.likes.length
@@ -64,7 +66,7 @@ export class Card {
         })
         .catch(e => console.log(e))
     } else {
-      api.addLikeCard(this._cardId)
+      this._apiAddLikeCard(this._cardId)
         .then((card) => {
           event.target.classList.add('element__like_active')
           this.likeCount.innerText = card.likes.length
@@ -75,7 +77,7 @@ export class Card {
   }
   // удаляем карточку
   _handleClickTrashBtn() {
-    api.deleteCard(this._cardId)
+    this._apiDeleteCard(this._cardId)
       .then(() => this._onDelete())
       .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
 
@@ -110,7 +112,7 @@ export class Card {
   _isLiked() {
     let liked = false
     this._likes.forEach(likeAuthor => {
-      if (likeAuthor._id === userId) liked = true
+      if (likeAuthor._id === this._userId) liked = true
     })
     return liked
   }
