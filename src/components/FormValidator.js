@@ -1,6 +1,4 @@
 import { validatorOptions } from "../utils/constants";
-console.log(validatorOptions);
-
 
 export class FormValidator {
 

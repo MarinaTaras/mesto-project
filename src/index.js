@@ -4,6 +4,8 @@ import UserInfo from './components/UserInfo.js';
 import Section from './components/Section.js';
 import Card from './components/Сard';
 import {BASE_URL, TOKEN, profileName, profileProfession, cardSection, avatar} from './utils/constants';
+import PopupWithImage from "./components/PopupWithImage";
+
 
 const api = new Api({
   baseUrl: BASE_URL,
@@ -12,6 +14,10 @@ const api = new Api({
     'Content-Type': 'application/json'
   }
 });
+
+// открытие попапа картинки
+const popupWithImage = new PopupWithImage('.popup__image')
+
 
 // Обработчики событий карточки
 const cardHandlers = {
@@ -46,7 +52,7 @@ api.getInitialCards()
         const cardsList = new Section({
                 items: cards,
                 renderer: (item) => {
-                    const card = new Card(item, '.template__element', cardHandlers, userId)
+                    const card = new Card(item, '.template__element', cardHandlers, () => popupWithImage.open(event), userId)
                     const cardElement = card.generate();
 
                     cardsList.addItem(cardElement);
@@ -56,7 +62,8 @@ api.getInitialCards()
         );
         cardsList.renderItems();
     })
-    .catch(() => console.log('Fail get initial cards'))
+    .catch((e) => console.log('Fail get initial cards', e))
+
 
 
 // Пример создания карточки

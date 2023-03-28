@@ -2,36 +2,34 @@ import { popups } from "../utils/constants";
 
 export default class Popup {
   constructor(selector) {
-    this._selector = selector;
+    this._popup = document.querySelector(selector);
+    this._handleEscClose = this._handleEscClose.bind(this)
+    this._setEventListeners()
   }
 
   open() {
-    this._selector.classList.add('popup_opened');
-    document.addEventListener('keydown', closeByEsc);
+    this._popup.classList.add('popup_opened');
+    document.addEventListener('keydown', this._handleEscClose);
   }
 
   close() {
-    this._selector.classList.remove('popup_opened');
-    document.removeEventListener('keydown', closeByEsc);
+    this._popup.classList.remove('popup_opened');
+    document.removeEventListener('keydown', this._handleEscClose);
   }
 
-  setEventListeners() {
-    popups.forEach((popup) => {
-      popup.addEventListener('mousedown', (evt) => {
-        if (evt.target.classList.contains('popup_opened')) {
-          closePopup(popup)
-        }
-        if (evt.target.classList.contains('popup__close-icon')) {
-          closePopup(popup)
-        }
-      })
+  _setEventListeners() {
+    this._popup.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup_opened')) {
+        this.close()
+      }
+      if (evt.target.classList.contains('popup__close-icon')) {
+        this.close()
+      }
     })
+
   }
 
   _handleEscClose(evt) {
-    if (evt.key === 'Escape') {
-      const openedPopup = document.querySelector('.popup_opened')
-      closePopup(openedPopup)
-    }
+    if (evt.key === 'Escape') this.close()
   }
 } 

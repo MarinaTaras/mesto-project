@@ -1,6 +1,6 @@
 
 export default class Card {
-  constructor(cardData, selector, cardHandlers, userId) {
+  constructor(cardData, selector, apiCardHandlers, handleCardClick, userId) {
     this._name = cardData.name;
     this._link = cardData.link;
     this._cardId = cardData._id;
@@ -11,11 +11,11 @@ export default class Card {
     // привязываем контекст к обработчикам слушателей
     this._handleClickLikeBtn = this._handleClickLikeBtn.bind(this)
     this._handleClickTrashBtn = this._handleClickTrashBtn.bind(this)
-    //this._handleCardClick = this._handleCardClick.bind(this) // потребуется, когда свяжем класс с попапом
+    this._handleCardClick = handleCardClick // связываем класс с попапом
 
-    this._apiDeleteLikeCard = cardHandlers.apiDeleteLikeCard
-    this._apiAddLikeCard = cardHandlers.apiAddLikeCard
-    this._apiDeleteCard = cardHandlers.apiDeleteCard
+    this._apiDeleteLikeCard = apiCardHandlers.apiDeleteLikeCard
+    this._apiAddLikeCard = apiCardHandlers.apiAddLikeCard
+    this._apiDeleteCard = apiCardHandlers.apiDeleteCard
 
     this._userId = userId
   }
@@ -37,31 +37,33 @@ export default class Card {
   }
 
   _setElementData() {  // заполняем данными
-    this.trash = this._element.querySelector('.element__trash')
-    if (this._userId !== this._owner._id) this.trash.remove()
-    const image = this._element.querySelector('.element__image')
-    const caption = this._element.querySelector('.element__text')
-    this.likeBtn = this._element.querySelector('.element__like')
-    this.likeCount = this._element.querySelector('.element__like-count')
-    image.src = this._link
-    image.alt = this._name
-    caption.textContent = this._name
-    this.likeCount.textContent = this._likes.length
-    this._setLikeBtn(this.likeBtn)
-
+    this._trash = this._element.querySelector('.element__trash')
+    if (this._userId !== this._owner._id) this._trash.remove()
+    this._image = this._element.querySelector('.element__image')
+    this._caption = this._element.querySelector('.element__text')
+    this._likeBtn = this._element.querySelector('.element__like')
+    this._likeCount = this._element.querySelector('.element__like-count')
+    this._image.src = this._link
+    this._image.alt = this._name
+    this._caption.textContent = this._name
+    this._likeCount.textContent = this._likes.length
+    this._setLikeBtn(this._likeBtn)  
   }
+
   // добавляем обработчик событий
   _setEventListeners() {
-    this.likeBtn.addEventListener('click', this._handleClickLikeBtn);
-    this.trash.addEventListener('click', this._handleClickTrashBtn);
+    this._likeBtn.addEventListener('click', this._handleClickLikeBtn);
+    this._trash.addEventListener('click', this._handleClickTrashBtn);
+    this._image.addEventListener('click', this._handleCardClick);
   }
+
   // ставим лайки
   _handleClickLikeBtn(event) {
     if (this._isLiked()) {
       this._apiDeleteLikeCard(this._cardId)
         .then((card) => {
           event.target.classList.remove('element__like_active')
-          this.likeCount.innerText = card.likes.length
+          this._likeCount.innerText = card.likes.length
           this._likes = card.likes
         })
         .catch(e => console.log(e))
@@ -69,7 +71,7 @@ export default class Card {
       this._apiAddLikeCard(this._cardId)
         .then((card) => {
           event.target.classList.add('element__like_active')
-          this.likeCount.innerText = card.likes.length
+          this._likeCount.innerText = card.likes.length
           this._likes = card.likes
         })
         .catch(e => console.log(e))
@@ -85,15 +87,13 @@ export default class Card {
 
   // удаление карточки из интерфейса
   _onDelete() {
-    //image.removeEventListener('click', openCard) //добавим потом, когда привяжем попапы
-    this.likeBtn.removeEventListener('click', this._handleClickLikeBtn)
-    this.trash && this.trash.removeEventListener('click', this._handleClickTrashBtn)
+    //this._image.removeEventListener('click', openCard) //добавим потом, когда привяжем попапы
+    this._likeBtn.removeEventListener('click', this._handleClickLikeBtn)
+    this._trash && this._trash.removeEventListener('click', this._handleClickTrashBtn)
     this._element.remove()
   }
 
-  // _setImageListener() {
-  //   image.addEventListener('click', console.log('ha ha ha')) //handleCardClick
-  // }
+  
 
   //  _openCard() {
   //     cardData.stopPropagation()
