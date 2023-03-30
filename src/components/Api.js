@@ -93,4 +93,5 @@ export default class Api {
             return this._checkResponseData(res)
         })
     }
+
 }

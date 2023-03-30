@@ -3,8 +3,10 @@ import Api from './components/Api.js';
 import UserInfo from './components/UserInfo.js';
 import Section from './components/Section.js';
 import Card from './components/Сard';
-import {BASE_URL, TOKEN, profileName, profileProfession, cardSection, avatar} from './utils/constants';
+import { BASE_URL, TOKEN, profileName, profileProfession, profileButton, cardSection, avatar } from './utils/constants';
 import PopupWithImage from "./components/PopupWithImage";
+import PopupWithForm from "./components/PopupWithForm";
+import Popup from "./components/Popup";
 
 
 const api = new Api({
@@ -21,48 +23,78 @@ const popupWithImage = new PopupWithImage('.popup__image')
 
 // Обработчики событий карточки
 const cardHandlers = {
-    apiDeleteLikeCard: api.deleteLikeCard.bind(api),
-    apiAddLikeCard: api.addLikeCard.bind(api),
-    apiDeleteCard: api.deleteCard.bind(api)
+  apiDeleteLikeCard: api.deleteLikeCard.bind(api),
+  apiAddLikeCard: api.addLikeCard.bind(api),
+  apiDeleteCard: api.deleteCard.bind(api)
 }
 
 // Обработчики событий профиля
 const userProfileHandlers = {
-    getUserInfo: api.getUserInfo.bind(api),
-    setUserInfo: api.editUserProfile.bind(api),
-    updateAvatar: api.editUserAvatar.bind(api)
+  getUserInfo: api.getUserInfo.bind(api),
+  setUserInfo: api.editUserProfile.bind(api),
+  updateAvatar: api.editUserAvatar.bind(api)
 }
 
 // Загрузка данных пользователя
-const userInfo = new UserInfo({userName: profileName, userData: profileProfession, userAvatar: avatar},
-    userProfileHandlers);
+const userInfo = new UserInfo({ userName: profileName, userData: profileProfession, userAvatar: avatar },
+  userProfileHandlers);
 
 let userId = 123456789;
 const info = userInfo.getUserInfo()
-    .then((info) => {
-        userId = info._id;
-        userInfo.setUserInfo(info);
-    })
-    .catch(() => console.log('Fail get and set userInfo'))
+  .then((info) => {
+    userId = info._id;
+    userInfo.setUserInfo(info);
+  })
+  .catch(() => console.log('Fail get and set userInfo'))
 
 
 // Загрузка начальных карточек
 api.getInitialCards()
-    .then((cards) => {
-        const cardsList = new Section({
-                items: cards,
-                renderer: (item) => {
-                    const card = new Card(item, '.template__element', cardHandlers, () => popupWithImage.open(event), userId)
-                    const cardElement = card.generate();
+  .then((cards) => {
+    const cardsList = new Section({
+      items: cards,
+      renderer: (item) => {
+        const card = new Card(item, '.template__element', cardHandlers,
+          () => popupWithImage.open(event), userId)
 
-                    cardsList.addItem(cardElement);
-                },
-            },
-            cardSection
-        );
-        cardsList.renderItems();
-    })
-    .catch((e) => console.log('Fail get initial cards', e))
+        const cardElement = card.generate();
+
+        cardsList.addItem(cardElement);
+      },
+    },
+      cardSection
+    );
+    cardsList.renderItems();
+  })
+  .catch((e) => console.log('Fail get initial cards', e))
+
+
+// форма редактирования профиля
+
+function handleUserProfileSubmit(sendToServer, updateUserInfo, userData) {
+  sendToServer(userData.name, userData.about)
+  updateUserInfo(userData)
+}
+
+const popupProfile = new PopupWithForm('.popup__profile', function(userData) {
+  api.editUserProfile(userData.name, userData.about)
+  userInfo.setUserInfo(userData)
+})
+
+popupProfile.setEventListeners()
+
+profileButton.addEventListener('click', () => popupProfile.open())
+
+// api.editUserProfile()
+//   .then((body) => {
+//     profileName.innerText = body.name
+//     profileProfession.innerText = body.about
+//   })
+//   .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+//   .finally(() => {
+//     button.textContent = "Сохранить"
+//   })
+
 
 
 
@@ -91,6 +123,7 @@ const practicumObj = {
 
 const card = new Card(practicumObj, '.template__element', cardHandlers, 456)
 elements.prepend(card.generate())*/
+
 
 
 /*
