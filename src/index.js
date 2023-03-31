@@ -6,8 +6,6 @@ import Card from './components/Сard';
 import { BASE_URL, TOKEN, profileName, profileProfession, profileButton, cardSection, avatar } from './utils/constants';
 import PopupWithImage from "./components/PopupWithImage";
 import PopupWithForm from "./components/PopupWithForm";
-import Popup from "./components/Popup";
-
 
 const api = new Api({
   baseUrl: BASE_URL,
@@ -38,15 +36,14 @@ const userProfileHandlers = {
 // Загрузка данных пользователя
 const userInfo = new UserInfo({ userName: profileName, userData: profileProfession, userAvatar: avatar },
   userProfileHandlers);
+let userId = -1;
 
-let userId = 123456789;
-const info = userInfo.getUserInfo()
+userInfo.getUserInfo()
   .then((info) => {
     userId = info._id;
     userInfo.setUserInfo(info);
   })
   .catch(() => console.log('Fail get and set userInfo'))
-
 
 // Загрузка начальных карточек
 api.getInitialCards()
@@ -70,60 +67,19 @@ api.getInitialCards()
 
 
 // форма редактирования профиля
-
-function handleUserProfileSubmit(sendToServer, updateUserInfo, userData) {
-  sendToServer(userData.name, userData.about)
-  updateUserInfo(userData)
-}
-
-const popupProfile = new PopupWithForm('.popup__profile', function(userData) {
-  api.editUserProfile(userData.name, userData.about)
-  userInfo.setUserInfo(userData)
+profileButton.addEventListener('click', () => {
+    const popupProfile = new PopupWithForm('.popup__profile', function(userData) {
+        api.editUserProfile(userData)
+            .then((data) =>
+                userInfo.setUserInfo(data)
+            )
+            .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+            .finally(() =>
+                popupProfile.close())
+    })
+    popupProfile.setEventListeners();
+    popupProfile.open();
 })
-
-popupProfile.setEventListeners()
-
-profileButton.addEventListener('click', () => popupProfile.open())
-
-// api.editUserProfile()
-//   .then((body) => {
-//     profileName.innerText = body.name
-//     profileProfession.innerText = body.about
-//   })
-//   .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
-//   .finally(() => {
-//     button.textContent = "Сохранить"
-//   })
-
-
-
-
-// Пример создания карточки
-/*const elements = document.querySelector('.elements')
-const cardLink = 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1530&q=80'
-const cardHandlers = {
-  apiDeleteLikeCard: api.deleteLikeCard.bind(api),
-  apiAddLikeCard: api.addLikeCard.bind(api),
-  apiDeleteCard: api.deleteCard.bind(api)
-}
-const practicumObj = {
-    "likes": [],
-    "_id": "5d1f0611d321eb4bdcd707dd",
-    "name": "Байкал",
-    "link": "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
-    "owner": {
-      "name": "Jacques Cousteau",
-      "about": "Sailor, researcher",
-      "avatar": "https://pictures.s3.yandex.net/frontend-developer/ava.jpg",
-      "_id": "ef5f7423f7f5e22bef4ad607",
-      "cohort": "local"
-    },
-    "createdAt": "2019-07-05T08:10:57.741Z"
-  }
-
-const card = new Card(practicumObj, '.template__element', cardHandlers, 456)
-elements.prepend(card.generate())*/
-
 
 
 /*

@@ -80,13 +80,13 @@ export default class Api {
             })
     }
 
-    editUserProfile(userName, userDescription) {
+    editUserProfile(userInfo) {
         return fetch(this._requestBaseUrl +'/users/me', {
             method: 'PATCH',
             headers: this._requestHeaders,
             body: JSON.stringify({
-                name: userName,
-                about: userDescription
+                name: userInfo.name,
+                about: userInfo.about
             })
         })
         .then(res => {

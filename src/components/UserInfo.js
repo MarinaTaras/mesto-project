@@ -1,5 +1,3 @@
-import {avatar} from "../utils/constants";
-
 export default class UserInfo {
     constructor(userInfoSelectors, userInfoHandlers) {
         this._selectorUserName = userInfoSelectors.userName;
@@ -14,7 +12,7 @@ export default class UserInfo {
     }
 
     setUserInfo(userInfo) {
-        this._setUserInfo(userInfo.name, userInfo.about);
+        this._setUserInfo(userInfo);
         this._updateAvatar(userInfo.avatar);
         this._selectorUserAvatar.src = userInfo.avatar;
         this._selectorUserName.textContent = userInfo.name;
