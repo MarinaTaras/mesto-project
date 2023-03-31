@@ -11,7 +11,8 @@ import {
     profileButton,
     cardSection,
     avatar,
-    addCardButton
+    addCardButton,
+    editAvatarButton
 } from './utils/constants';
 import PopupWithImage from "./components/PopupWithImage";
 import PopupWithForm from "./components/PopupWithForm";
@@ -91,6 +92,22 @@ profileButton.addEventListener('click', () => {
     popupProfile.open();
 })
 
+// форма редактирования аватара пользователя
+editAvatarButton.addEventListener('click', () => {
+    // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
+    const popupAvatar = new PopupWithForm('.popup__avatar', function(userData) {
+        api.editUserAvatar(userData) // получаем данные пользователя с новым аватаром
+            .then((data) =>
+                userInfo.setUserInfo(data) // обновляем данные у себя на странице
+            )
+            .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+            .finally(() =>
+                popupAvatar.close())
+    })
+    popupAvatar.setEventListeners();
+    popupAvatar.open();
+})
+
 // форма добавления карточки
 addCardButton.addEventListener('click', () => {
     // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
@@ -112,51 +129,8 @@ addCardButton.addEventListener('click', () => {
     popupAddCard.open();
 })
 
-/*
-let userId
-profileButton.addEventListener('click', () => {
-  getProfileData()
-  openPopup(profilePopup)
-})
-addCardButton.addEventListener('click', () => {
-  openPopup(mestoPopup)
-})
-editAvatarButton.addEventListener('click', () => {
-  openPopup(avatarPopup)
-})
-profileForm && profileForm.addEventListener('submit', submitProfile)
-//редактирование аватарки
-avatarForm && avatarForm.addEventListener('submit', editAvatar)
-closePopups()
-/!**
- * Подготовка данных для профиля
- *!/
-function getProfileData() {
-  profileForm['profile-name'].value = profileName.innerText
-  profileForm['profile-profession'].value = profileProfession.innerText
-}
-/!**
- * Submit формы профиля
- *!/
-function submitProfile(event) {
-  event.preventDefault()
-  const name = profileForm['profile-name'].value
-  const about = profileForm['profile-profession'].value
-  const form = event.target
-  const button = form.querySelector('.popup__button')
-  button.textContent = "Сохранение..."
-  api.editUserProfile(name, about)
-    .then((body) => {
-      profileName.innerText = body.name
-      profileProfession.innerText = body.about
-      closePopup(profilePopup)
-    })
-    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
-    .finally(() => {
-      button.textContent = "Сохранить"
-    })
-}
 // валидация форм
+/*
 enableValidation({
   formSelector: '.popup__form',
   inputSelector: '.popup__item',
