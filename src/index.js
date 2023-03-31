@@ -62,7 +62,7 @@ api.getInitialCards()
       items: cards,
       renderer: (item) => {
         const card = new Card(item, '.template__element', cardHandlers,
-          () => popupWithImage.open(), userId)
+          () => popupWithImage.open(event), userId)
 
         const cardElement = card.generate();
 
@@ -117,7 +117,7 @@ addCardButton.addEventListener('click', () => {
                 // получили от сервера полные данные карточки (id и тд)
                 // теперь создаем карточку на странице
                 const card = new Card(serverCardData, '.template__element', cardHandlers,
-                    () => popupWithImage.open(), userId)
+                    () => popupWithImage.open(event), userId)
                 const cardElement = card.generate();
                 cardSection.append(cardElement);
             })
