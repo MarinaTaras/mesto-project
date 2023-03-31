@@ -3,7 +3,16 @@ import Api from './components/Api.js';
 import UserInfo from './components/UserInfo.js';
 import Section from './components/Section.js';
 import Card from './components/Сard';
-import { BASE_URL, TOKEN, profileName, profileProfession, profileButton, cardSection, avatar } from './utils/constants';
+import {
+    BASE_URL,
+    TOKEN,
+    profileName,
+    profileProfession,
+    profileButton,
+    cardSection,
+    avatar,
+    addCardButton
+} from './utils/constants';
 import PopupWithImage from "./components/PopupWithImage";
 import PopupWithForm from "./components/PopupWithForm";
 
@@ -52,7 +61,7 @@ api.getInitialCards()
       items: cards,
       renderer: (item) => {
         const card = new Card(item, '.template__element', cardHandlers,
-          () => popupWithImage.open(event), userId)
+          () => popupWithImage.open(), userId)
 
         const cardElement = card.generate();
 
@@ -68,10 +77,11 @@ api.getInitialCards()
 
 // форма редактирования профиля
 profileButton.addEventListener('click', () => {
+   // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
     const popupProfile = new PopupWithForm('.popup__profile', function(userData) {
-        api.editUserProfile(userData)
+        api.editUserProfile(userData) // отправляем новые имя и статус на сервер
             .then((data) =>
-                userInfo.setUserInfo(data)
+                userInfo.setUserInfo(data) // обновляем данные у себя на странице
             )
             .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
             .finally(() =>
@@ -81,6 +91,26 @@ profileButton.addEventListener('click', () => {
     popupProfile.open();
 })
 
+// форма добавления карточки
+addCardButton.addEventListener('click', () => {
+    // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
+    const popupAddCard = new PopupWithForm('.popup__mesto', function(cardInput) {
+        api.addCard(cardInput) // отправляем имя и картинку карточки на сервер
+            .then((serverCardData) => {
+                // получили от сервера полные данные карточки (id и тд)
+                // теперь создаем карточку на странице
+                const card = new Card(serverCardData, '.template__element', cardHandlers,
+                    () => popupWithImage.open(), userId)
+                const cardElement = card.generate();
+                cardSection.append(cardElement);
+            })
+            .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+            .finally(() =>
+                popupAddCard.close())
+    })
+    popupAddCard.setEventListeners();
+    popupAddCard.open();
+})
 
 /*
 let userId
