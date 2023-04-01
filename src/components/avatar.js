@@ -1,16 +1,6 @@
-import { avatarPopup } from "../utils/constants"
-import { editMyAvatar } from "./Api"
-// This file should be deleted, temporary solution
-
+import { avatarPopup } from ".."
+import { editMyAvatar } from "./api"
 import { closePopup } from "./modal"
-import api from './Api.js';
-// const api = new Api({
-//   baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-20',
-//   headers: {
-//     authorization: '0499d3b8-89b6-4fc9-a91a-922f11ca9262',
-//     'Content-Type': 'application/json'
-//   }
-// });
 
 const profAvatar = document.querySelector('.profile__avatar')
 
@@ -23,7 +13,7 @@ export function editAvatar(event) {
 
   event.preventDefault()
   const link = avatarForm['avatar-link'].value
-    api.editUserAvatar(link)
+  editMyAvatar(link)
     .then((result) => {
       profAvatar.src = result.avatar
       closePopup(avatarPopup)

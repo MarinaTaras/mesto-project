@@ -44,7 +44,7 @@ export function enableValidation(options) {
     return inputList.some((popupItem) => {
       // Если поле не валидно, колбэк вернёт true
       // Обход массива прекратится и вся функция
-      // isFormValid вернёт true
+      // hasInvalidInput вернёт true
 
       return !popupItem.validity.valid;
     })
