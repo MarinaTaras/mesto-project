@@ -1,102 +1,107 @@
-import { validatorOptions } from "../utils/constants";
-
-export class FormValidator {
+export default class FormValidator {
 
   constructor(validatorOptions, form) {
-    this._formSelector = document.querySelector(validatorOptions.formSelector);
-    this._inputSelector = document.querySelector(validatorOptions.inputSelector);
-    this._submitButtonSelector = document.querySelector(validatorOptions.submitButtonSelector);
-    this._inactiveButtonClass = document.querySelector(validatorOptions.inactiveButtonClass);
-    this._inputErrorClass = document.querySelector(validatorOptions.inputErrorClass);
-    this._errorClass = document.querySelector(validatorOptions.errorClass);
-    this._form = form;
+    this._form = form
+    this._inputList = this._form.querySelectorAll(validatorOptions.inputSelector);
+    this._submitButton = this._form.querySelector(validatorOptions.submitButtonSelector);
+    this._inactiveButtonClass = validatorOptions.inactiveButtonClass;
+    this._inputErrorClass = validatorOptions.inputErrorClass;
+    this._errorClass = validatorOptions.errorClass;
   }
 
   enableValidation() {
-    const formList = Array.from(document.querySelectorAll(validatorOptions.formSelector))
-    formList.forEach(this._setEventListeners)
+    this._toggleButtonState(this._inputList)
+    this._setEventListeners()
+  }
+
+  destroy() {
+    this.unsubscribe()
   }
   //метод добавляет класс с ошибкой
-  _showInputError(formSelector, inputSelector, errorMessage) {
-    const popupError = formSelector.querySelector(`.${this._inputSelector.id}-error`);
-    this._inputSelector.classList.add(this._inputErrorClass);
+  _showInputError(input) {
+
+    const errorMessage = input.validationMessage
+    const popupError = this._form.querySelector(`.${input.id}-error`);
+    input.classList.add(this._inputErrorClass);
     popupError.textContent = errorMessage;
     popupError.classList.add(this._errorClass);
   };
 
   // метод удаляет класс с ошибкой
-  _hideInputError(formSelector, inputSelector) {
-    const popupError = formSelector.querySelector(`.${this._inputSelector.id}-error`);
-    inputSelector.classList.remove(this._inputErrorClass);
+  _hideInputError(input) {
+    const popupError = this._form.querySelector(`.${input.id}-error`);
+    input.classList.remove(this._inputErrorClass);
     popupError.classList.remove(this._errorClass);
   };
 
   // метод переключения текста ошибок
-  _toggleErrorMessage(formSelector, inputSelector) {
-    if (this._inputSelector.validity.patternMismatch) {
+  _toggleErrorMessage(input) {
+    if (input.validity.patternMismatch) {
       // встроенный метод setCustomValidity принимает на вход строку
       // и заменяет ею стандартное сообщение об ошибке
-      this._inputSelector.setCustomValidity(this._inputSelector.dataset.errorMessage)
+      input.setCustomValidity(input.dataset.errorMessage)
     } else {
       // если передать пустую строку, то будут доступны
       // стандартные браузерные сообщения
-      this._inputSelector.setCustomValidity("");
+      input.setCustomValidity("");
     }
 
-    if (!inputSelector.validity.valid) {
+    if (!input.validity.valid) {
       // Если поле не проходит валидацию, покажем ошибку
-      showInputError(this._formSelector, this._inputSelector, this._inputSelector.validationMessage);
+      this._showInputError(input);
     } else {
       // Если проходит, скроем
-      hideInputError(this._formSelector, this._inputSelector);
+      this._hideInputError(input);
     }
   };
 
-  // метод находит все формы и ищет невалидный инпут
-  _isFormValid(inputList) {
+  // метод ищет невалидный инпут
+  _isFormValid = (inputList) => {
     // проходим по этому массиву методом some
-    return inputList.some((inputSelector) => {
+    return Array.from(inputList).some((input) => {
       // Если поле не валидно, колбэк вернёт true
       // Обход массива прекратится и вся функция
-      // hasInvalidInput вернёт true
+      // isFormValid вернёт true
 
-      return !inputSelector.validity.valid;
+      return !input.validity.valid;
     })
   }
 
   // метод поиска кнопки, состояние которой надо поменять
-  _toggleButtonState(inputList, submitButtonSelector) {
-    if (_isFormValid(inputList)) {
-      submitButtonSelector.disabled = true;
-      submitButtonSelector.classList.add(this._inactiveButtonClass);
+  _toggleButtonState(inputList) {
+    if (this._isFormValid(inputList)) {
+      this._submitButton.disabled = true;
+      this._submitButton.classList.add(this._inactiveButtonClass);
     } else {
       // иначе сделай кнопку активной
-      submitButtonSelector.disabled = false;
-      submitButtonSelector.classList.remove(this._inactiveButtonClass);
+      this._submitButton.disabled = false;
+      this._submitButton.classList.remove(this._inactiveButtonClass);
     }
   }
 
   // метод, который примет параметром элементы формы и добавит полям нужные обработчики
-  _setEventListeners(formSelector) {
-    const inputList = Array.from(this._formSelector.querySelectorAll(this._inputSelector))
-    const submitButton = this._formSelector.querySelector(this._submitButtonSelector)
+  _setEventListeners() {
 
-    _toggleButtonState(inputList, submitButton)
-
-    formSelector.addEventListener('reset', () => {
-      // `setTimeout` нужен для того, чтобы дождаться очищения формы (вызов уйдет в конце стэка) и только потом вызвать `toggleButtonState`
+    const toggleButtonState = () => {
+      // `setTimeout` нужен для того, чтобы дождаться очищения формы 
+      //(вызов уйдет в конце стэка) и только потом вызвать `toggleButtonState`
+      // достаточно указать 0 миллисекунд, чтобы после `reset` 
+      //уже сработало действие
       setTimeout(() => {
-        toggleButtonState(inputList, submitButton);
-      }, 0); // достаточно указать 0 миллисекунд, чтобы после `reset` уже сработало действие
-    });
+        this._toggleButtonState(this._inputList);
+      }, 0); 
+    }
 
-
-    inputList.forEach((inputSelector) => {
-      inputSelector.addEventListener('input', () => {
+    const toggleErrorMessage = (input) => {
         // Вызовем функцию toggleErrorMessage на каждый ввод символа
-        toggleErrorMessage(this._formSelector, this._inputSelector)
-        toggleButtonState(inputList, submitButton)
-      })
+        this._toggleErrorMessage(input)
+        this._toggleButtonState(this._inputList)
+    }
+
+    this._form.addEventListener('reset', toggleButtonState);
+
+    this._inputList.forEach((input) => {
+      input.addEventListener('input', () => toggleErrorMessage(input))
     })
   }
 }
