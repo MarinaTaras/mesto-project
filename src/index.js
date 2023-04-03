@@ -69,7 +69,7 @@ Promise.all([userInfo.getUserInfo(), api.getInitialCards()])
         const cardsList = new Section({
             items: cards,
             renderer: (data) => {
-                cardsList.prependItem(createCard(data));
+                cardsList.appendItem(createCard(data));
             },
         },
         cardSection
