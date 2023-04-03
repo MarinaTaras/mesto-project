@@ -13,7 +13,7 @@ import {
   avatar,
   addCardButton,
   editAvatarButton,
-  validatorOptions
+  validatorOptions, submitCardButton, submitUserButton, submitAvatarButton
 } from './utils/constants';
 import PopupWithImage from "./components/PopupWithImage";
 import PopupWithForm from "./components/PopupWithForm";
@@ -29,7 +29,6 @@ const api = new Api({
 
 // открытие попапа картинки
 const popupWithImage = new PopupWithImage('.popup__image')
-
 
 // Обработчики событий карточки
 const cardHandlers = {
@@ -50,12 +49,16 @@ function addValidation(form) {
   new FormValidator(validatorOptions, form).enableValidation()
 }
 
+function createCard(cardData) {
+  const card = new Card(cardData, '.template__element', cardHandlers,
+      () => popupWithImage.open(event), userId)
+  return card.generate();
+}
+
 // Загрузка данных пользователя
 const userInfo = new UserInfo({ userName: profileName, userData: profileProfession, userAvatar: avatar },
   userProfileHandlers);
 let userId = -1;
-
-
 
 userInfo.getUserInfo()
   .then((info) => {
@@ -64,18 +67,14 @@ userInfo.getUserInfo()
   })
   .catch(() => console.log('Fail get and set userInfo'))
 
+
 // Загрузка начальных карточек
 api.getInitialCards()
   .then((cards) => {
     const cardsList = new Section({
       items: cards,
-      renderer: (item) => {
-        const card = new Card(item, '.template__element', cardHandlers,
-          () => popupWithImage.open(event), userId)
-
-        const cardElement = card.generate();
-
-        cardsList.addItem(cardElement);
+      renderer: (data) => {
+        cardsList.prependItem(createCard(data));
       },
     },
       cardSection
@@ -90,12 +89,15 @@ profileButton.addEventListener('click', () => {
   // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
   const popupProfile = new PopupWithForm('.popup__profile', function (userData) {
     api.editUserProfile(userData) // отправляем новые имя и статус на сервер
-      .then((data) =>
-        userInfo.setUserInfo(data) // обновляем данные у себя на странице
-      )
+      .then((data) => {
+          userInfo.setUserInfo(data) // обновляем данные у себя на странице
+          popupProfile.close()
+      })
       .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
       .finally(() =>
-        popupProfile.close())
+      {
+        submitUserButton.textContent = "Сохранить";
+      })
   })
   popupProfile.setEventListeners();
   popupProfile.open();
@@ -104,19 +106,20 @@ profileButton.addEventListener('click', () => {
   addValidation(popupProfile._form);
 })
 
-
-
 // форма редактирования аватара пользователя
 editAvatarButton.addEventListener('click', () => {
   // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
   const popupAvatar = new PopupWithForm('.popup__avatar', function (userData) {
     api.editUserAvatar(userData) // получаем данные пользователя с новым аватаром
-      .then((data) =>
-        userInfo.setUserInfo(data) // обновляем данные у себя на странице
-      )
+      .then((data) =>{
+          userInfo.setUserInfo(data); // обновляем данные у себя на странице
+          popupAvatar.close()
+      })
       .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
       .finally(() =>
-        popupAvatar.close())
+      {
+        submitAvatarButton.textContent = "Сохранить";
+      })
   })
   popupAvatar.setEventListeners();
   popupAvatar.open();
@@ -132,14 +135,23 @@ addCardButton.addEventListener('click', () => {
       .then((serverCardData) => {
         // получили от сервера полные данные карточки (id и тд)
         // теперь создаем карточку на странице
-        const card = new Card(serverCardData, '.template__element', cardHandlers,
-          () => popupWithImage.open(event), userId)
-        const cardElement = card.generate();
-        cardSection.append(cardElement);
+        const cardsList = new Section({
+              items: [serverCardData],
+              renderer: (data) => {
+                cardsList.prependItem(createCard(data));
+              },
+            },
+            cardSection
+        );
+        cardsList.renderItems();
+        popupAddCard.close()
       })
       .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
       .finally(() =>
-        popupAddCard.close())
+      {
+        submitCardButton.textContent = "Сохранить";
+      }
+      )
   })
   popupAddCard.setEventListeners();
   popupAddCard.open();

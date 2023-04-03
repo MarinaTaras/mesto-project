@@ -1,10 +1,13 @@
 // POPUPS
 // окно формы профиля
 export const profilePopup = document.querySelector('.popup__profile')
+export const submitUserButton = profilePopup.querySelector('.popup__button')
 // окно формы добпвления карточи
 export const mestoPopup = document.querySelector('.popup__mesto')
+export const submitCardButton = mestoPopup.querySelector('.popup__button')
 // окно редактирования аватара
 export const avatarPopup = document.querySelector('.popup__avatar')
+export const submitAvatarButton = avatarPopup.querySelector('.popup__button')
 
 // блок картинок
 export const cardSection = document.querySelector('.elements')
