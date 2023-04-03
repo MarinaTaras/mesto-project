@@ -5,6 +5,7 @@ import Popup from "./Popup";
 export default class PopupWithImage extends Popup {
   constructor(selector) {
     super(selector)
+    super._setEventListeners();
   }
 
   open(event) {

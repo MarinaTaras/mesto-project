@@ -55,33 +55,28 @@ function createCard(cardData) {
   return card.generate();
 }
 
-// Загрузка данных пользователя
+
 const userInfo = new UserInfo({ userName: profileName, userData: profileProfession, userAvatar: avatar },
-  userProfileHandlers);
+    userProfileHandlers);
 let userId = -1;
 
-userInfo.getUserInfo()
-  .then((info) => {
-    userId = info._id;
-    userInfo.setUserInfo(info);
-  })
-  .catch(() => console.log('Fail get and set userInfo'))
-
-
-// Загрузка начальных карточек
-api.getInitialCards()
-  .then((cards) => {
-    const cardsList = new Section({
-      items: cards,
-      renderer: (data) => {
-        cardsList.prependItem(createCard(data));
-      },
-    },
-      cardSection
-    );
-    cardsList.renderItems();
-  })
-  .catch((e) => console.log('Fail get initial cards', e))
+Promise.all([userInfo.getUserInfo(), api.getInitialCards()])
+    .then(([userData, cards]) => {
+        // Загрузка данных пользователя
+        userId = userData._id;
+        userInfo.setUserInfo(userData);
+        // Отрисовка карточек с сервера
+        const cardsList = new Section({
+            items: cards,
+            renderer: (data) => {
+                cardsList.prependItem(createCard(data));
+            },
+        },
+        cardSection
+        );
+        cardsList.renderItems();
+    })
+    .catch(err => console.log('Fail to load profile or cards: ', err))
 
 
 // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
