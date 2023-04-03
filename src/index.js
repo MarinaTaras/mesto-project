@@ -84,79 +84,81 @@ api.getInitialCards()
   .catch((e) => console.log('Fail get initial cards', e))
 
 
+// Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
+const popupProfile = new PopupWithForm('.popup__profile', function (userData) {
+    api.editUserProfile(userData) // отправляем новые имя и статус на сервер
+        .then((data) => {
+            userInfo.setUserInfo(data) // обновляем данные у себя на странице
+            popupProfile.close()
+        })
+        .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+        .finally(() =>
+        {
+            submitUserButton.textContent = "Сохранить";
+        })
+})
+popupProfile.setEventListeners();
+//добавляем валидацию формы
+addValidation(popupProfile._form);
+
 // форма редактирования профиля
 profileButton.addEventListener('click', () => {
-  // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
-  const popupProfile = new PopupWithForm('.popup__profile', function (userData) {
-    api.editUserProfile(userData) // отправляем новые имя и статус на сервер
-      .then((data) => {
-          userInfo.setUserInfo(data) // обновляем данные у себя на странице
-          popupProfile.close()
-      })
-      .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
-      .finally(() =>
-      {
-        submitUserButton.textContent = "Сохранить";
-      })
-  })
-  popupProfile.setEventListeners();
-  popupProfile.open();
-  
-  //добавляем валидацию формы
-  addValidation(popupProfile._form);
+    popupProfile.open();
 })
+
+// Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
+const popupAvatar = new PopupWithForm('.popup__avatar', function (userData) {
+    api.editUserAvatar(userData) // получаем данные пользователя с новым аватаром
+        .then((data) =>{
+            userInfo.setUserInfo(data); // обновляем данные у себя на странице
+            popupAvatar.close()
+        })
+        .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+        .finally(() =>
+        {
+            submitAvatarButton.textContent = "Сохранить";
+        })
+})
+popupAvatar.setEventListeners();
+//добавляем валидацию формы
+addValidation(popupAvatar._form);
 
 // форма редактирования аватара пользователя
 editAvatarButton.addEventListener('click', () => {
-  // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
-  const popupAvatar = new PopupWithForm('.popup__avatar', function (userData) {
-    api.editUserAvatar(userData) // получаем данные пользователя с новым аватаром
-      .then((data) =>{
-          userInfo.setUserInfo(data); // обновляем данные у себя на странице
-          popupAvatar.close()
-      })
-      .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
-      .finally(() =>
-      {
-        submitAvatarButton.textContent = "Сохранить";
-      })
-  })
-  popupAvatar.setEventListeners();
   popupAvatar.open();
-  //добавляем валидацию формы
-  addValidation(popupAvatar._form);
 })
+
+// Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
+const popupAddCard = new PopupWithForm('.popup__mesto', function (cardInput) {
+    api.addCard(cardInput) // отправляем имя и картинку карточки на сервер
+        .then((serverCardData) => {
+            // получили от сервера полные данные карточки (id и тд)
+            // теперь создаем карточку на странице
+            const cardsList = new Section({
+                    items: [serverCardData],
+                    renderer: (data) => {
+                        cardsList.prependItem(createCard(data));
+                    },
+                },
+                cardSection
+            );
+            cardsList.renderItems();
+            popupAddCard.close()
+        })
+        .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+        .finally(() =>
+            {
+                submitCardButton.textContent = "Сохранить";
+            }
+        )
+})
+popupAddCard.setEventListeners();
+//добавляем валидацию формы
+addValidation(popupAddCard._form);
 
 // форма добавления карточки
 addCardButton.addEventListener('click', () => {
-  // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
-  const popupAddCard = new PopupWithForm('.popup__mesto', function (cardInput) {
-    api.addCard(cardInput) // отправляем имя и картинку карточки на сервер
-      .then((serverCardData) => {
-        // получили от сервера полные данные карточки (id и тд)
-        // теперь создаем карточку на странице
-        const cardsList = new Section({
-              items: [serverCardData],
-              renderer: (data) => {
-                cardsList.prependItem(createCard(data));
-              },
-            },
-            cardSection
-        );
-        cardsList.renderItems();
-        popupAddCard.close()
-      })
-      .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
-      .finally(() =>
-      {
-        submitCardButton.textContent = "Сохранить";
-      }
-      )
-  })
-  popupAddCard.setEventListeners();
-  popupAddCard.open();
-  //добавляем валидацию формы
-  addValidation(popupAddCard._form);
+    popupAddCard.open();
 })
 
 
