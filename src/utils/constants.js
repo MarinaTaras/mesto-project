@@ -34,6 +34,9 @@ export const avatar = document.querySelector('.profile__avatar')
 export const profileName = document.querySelector('.profile__name')
 // профессия профиля в шапке
 export const profileProfession = document.querySelector('.profile__profession')
+//поля ввода формы профиля
+export const profileNameHolder = document.querySelector('#profilename')
+export const profileProfessionHolder = document.querySelector('#profileprofession')
 
 export const CARD_TEMPLATE_SELECTOR = '.template__element'
 export const BASE_URL = 'https://mesto.nomoreparties.co/v1/plus-cohort-20'
