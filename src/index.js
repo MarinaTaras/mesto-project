@@ -66,13 +66,16 @@ const userInfo = new UserInfo({ userName: profileName, userData: profileProfessi
   userProfileHandlers);
 let userId = -1;
 
+//вспомогательная переменная для создания экземпляра класса Section
+let cardsList
+
 Promise.all([api.getUserInfo(), api.getInitialCards()])
   .then(([userData, cards]) => {
     // Загрузка данных пользователя
     userId = userData._id;
     userInfo.setUserInfo(userData);
     // Отрисовка карточек с сервера
-    const cardsList = new Section({
+    cardsList = new Section({
       items: cards,
       renderer: (data) => {
         cardsList.prependItem(createCard(data));
@@ -110,6 +113,7 @@ profileButton.addEventListener('click', () => {
       profileNameHolder.value = userData.name
       profileProfessionHolder.value = userData.about
     })
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
 })
 
 // Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
@@ -139,15 +143,10 @@ const popupAddCard = new PopupWithForm('.popup__mesto', function (cardInput) {
     .then((serverCardData) => {
       // получили от сервера полные данные карточки (id и тд)
       // теперь создаем карточку на странице
-      const cardsList = new Section({
-        items: [serverCardData],
-        renderer: (data) => {
-          cardsList.prependItem(createCard(data));
-        },
-      },
-        cardSection
-      );
-      cardsList.renderItems();
+      const newCard = createCard(serverCardData)
+      // добавляем карточку в блок карточек
+      cardsList.prependItem(newCard)
+
       popupAddCard.close()
     })
     .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
