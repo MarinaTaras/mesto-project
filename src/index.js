@@ -1,138 +1,167 @@
 import './pages/index.css'
-// импорт функции валидации
-import { enableValidation } from "./components/validate.js"
-// импорт функций работы модальных окон
-import { closePopup, openPopup } from "./components/modal"
-import { avatarForm, editAvatar } from './components/avatar'
-import { editMyProfile, getInitialCards, getUserInfo } from './components/api'
-import { addCards } from './components/card'
-import { closePopups } from './components/util'
+import Api from './components/Api.js';
+import UserInfo from './components/UserInfo.js';
+import Section from './components/Section.js';
+import Card from './components/Сard';
+import {
+  BASE_URL,
+  TOKEN,
+  profileName,
+  profileProfession,
+  profileButton,
+  cardSection,
+  avatar,
+  addCardButton,
+  editAvatarButton,
+  validatorOptions,
+  submitCardButton,
+  submitUserButton,
+  submitAvatarButton,
+  profileNameHolder,
+  profileProfessionHolder
+} from './utils/constants';
+import PopupWithImage from "./components/PopupWithImage";
+import PopupWithForm from "./components/PopupWithForm";
+import FormValidator from "./components/FormValidator"
 
-// POPUPS
-// окно формы профиля
-const profilePopup = document.querySelector('.popup__profile')
-// окно формы добпвления карточи 
-const mestoPopup = document.querySelector('.popup__mesto')
-// окно редактирования аватара
-export const avatarPopup = document.querySelector('.popup__avatar')
 
-export let userId
+const api = new Api({
+  baseUrl: BASE_URL,
+  headers: {
+    authorization: TOKEN,
+    'Content-Type': 'application/json'
+  }
+});
 
-// КНОПКИ ОТКРЫТИЯ ПОПАПОВ
-const profileButton = document.getElementById('infobutton')
-const addCardButton = document.getElementById('addbutton')
-const editAvatarButton = document.getElementById('editbutton')
+// открытие попапа картинки
+const popupWithImage = new PopupWithImage('.popup__image')
 
-// ФОРМЫ 
-// редактирование профиля
-const profileForm = document.forms['profile']
-
-// ПОЛЯ ПРОФИЛЯ
-//аватар
-const avatar = document.querySelector('.profile__avatar')
-// имя профиля в шапке
-const profileName = document.querySelector('.profile__name')
-// профессия профиля в шапке
-const profileProfession = document.querySelector('.profile__profession')
-
-// функции
-
-// добавим события
-
-profileButton.addEventListener('click', () => {
-  getProfileData()
-  openPopup(profilePopup)
-})
-
-addCardButton.addEventListener('click', () => {
-  openPopup(mestoPopup)
-})
-
-editAvatarButton.addEventListener('click', () => {
-  openPopup(avatarPopup)
-})
-
-profileForm && profileForm.addEventListener('submit', submitProfile)
-
-//редактирование аватарки
-avatarForm && avatarForm.addEventListener('submit', editAvatar)
-
-closePopups()
-
-/**
- * Подготовка данных для профиля
- */
-function getProfileData() {
-  profileForm['profile-name'].value = profileName.innerText
-  profileForm['profile-profession'].value = profileProfession.innerText
+// Обработчики событий карточки
+const cardHandlers = {
+  apiDeleteLikeCard: api.deleteLikeCard.bind(api),
+  apiAddLikeCard: api.addLikeCard.bind(api),
+  apiDeleteCard: api.deleteCard.bind(api)
 }
 
-/**
- * Submit формы профиля
- */
-function submitProfile(event) {
+// Обработчики событий профиля
+const userProfileHandlers = {
+  getUserInfo: api.getUserInfo.bind(api),
+  setUserInfo: api.editUserProfile.bind(api),
+  updateAvatar: api.editUserAvatar.bind(api)
+}
 
-  event.preventDefault()
+// функция для создания экземпляра класса валидации
+function addValidation(form) {
+  new FormValidator(validatorOptions, form).enableValidation()
+}
 
-  const name = profileForm['profile-name'].value
-  const about = profileForm['profile-profession'].value
-  const body = JSON.stringify({ name, about })
-  const form = event.target
-  const button = form.querySelector('.popup__button')
-  button.textContent = "Сохранение..."
+function createCard(cardData) {
+  const card = new Card(cardData, '.template__element', cardHandlers,
+    () => popupWithImage.open(event), userId)
+  return card.generate();
+}
 
-  editMyProfile(body)
-    .then((body) => {
-      profileName.innerText = body.name
-      profileProfession.innerText = body.about
-      closePopup(profilePopup)
+
+const userInfo = new UserInfo({ userName: profileName, userData: profileProfession, userAvatar: avatar },
+  userProfileHandlers);
+let userId = -1;
+
+//вспомогательная переменная для создания экземпляра класса Section
+let cardsList
+
+Promise.all([api.getUserInfo(), api.getInitialCards()])
+  .then(([userData, cards]) => {
+    // Загрузка данных пользователя
+    userId = userData._id;
+    userInfo.setUserInfo(userData);
+    // Отрисовка карточек с сервера
+    cardsList = new Section({
+      items: cards,
+      renderer: (data) => {
+        cardsList.prependItem(createCard(data));
+      },
+    },
+      cardSection
+    );
+    cardsList.renderItems();
+  })
+  .catch(err => console.log('Fail to load profile or cards: ', err))
+
+
+// Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
+const popupProfile = new PopupWithForm('.popup__profile', function (userData) {
+  api.editUserProfile(userData) // отправляем новые имя и статус на сервер
+    .then((data) => {
+      userInfo.setUserInfo(data) // обновляем данные у себя на странице
+      popupProfile.close()
     })
     .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
     .finally(() => {
-      button.textContent = "Сохранить"
+      submitUserButton.textContent = "Сохранить";
     })
-}
+})
 
-// валидация форм
+popupProfile.setEventListeners();
+//добавляем валидацию формы
+addValidation(popupProfile._form);
 
-enableValidation({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__item',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_inactive',
-  inputErrorClass: 'popup__item_error',
-  errorClass: 'popup__span_error-active'
-});
+// форма редактирования профиля
+profileButton.addEventListener('click', () => {
+  popupProfile.open();
+  api.getUserInfo()
+    .then((userData) => {
+      profileNameHolder.value = userData.name
+      profileProfessionHolder.value = userData.about
+    })
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+})
 
+// Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
+const popupAvatar = new PopupWithForm('.popup__avatar', function (userData) {
+  api.editUserAvatar(userData) // получаем данные пользователя с новым аватаром
+    .then((data) => {
+      userInfo.setUserInfo(data); // обновляем данные у себя на странице
+      popupAvatar.close()
+    })
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+    .finally(() => {
+      submitAvatarButton.textContent = "Сохранить";
+    })
+})
+popupAvatar.setEventListeners();
+//добавляем валидацию формы
+addValidation(popupAvatar._form);
 
+// форма редактирования аватара пользователя
+editAvatarButton.addEventListener('click', () => {
+  popupAvatar.open();
+})
 
-function createUser(result) {
-  avatar.src = result.avatar
-  profileName.innerHTML = result.name
-  profileProfession.innerHTML = result.about
-  userId = result._id
-}
+// Создаём класс формы и передаём коллбэк-обработчик отправки формы с данными
+const popupAddCard = new PopupWithForm('.popup__mesto', function (cardInput) {
+  api.addCard(cardInput) // отправляем имя и картинку карточки на сервер
+    .then((serverCardData) => {
+      // получили от сервера полные данные карточки (id и тд)
+      // теперь создаем карточку на странице
+      const newCard = createCard(serverCardData)
+      // добавляем карточку в блок карточек
+      cardsList.prependItem(newCard)
 
+      popupAddCard.close()
+    })
+    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e))
+    .finally(() => {
+      submitCardButton.textContent = "Сохранить";
+    }
+    )
+})
+popupAddCard.setEventListeners();
+//добавляем валидацию формы
+addValidation(popupAddCard._form);
 
-// Старт
-
-export function appStart() {
-  Promise.all([
-    getUserInfo(),
-    getInitialCards()
-  ]).then(res => {
-    const userInfo = res[0]
-    const cards = res[1]
-    createUser(userInfo)
-    addCards(cards)
-  })
-    .catch((e) => console.log('Что-то пошло не так. Код ответа сервера:', e));
-}
-
-appStart()
-
-
-
-
+// форма добавления карточки
+addCardButton.addEventListener('click', () => {
+  popupAddCard.open();
+})
 
 
