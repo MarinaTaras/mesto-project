@@ -17,9 +17,14 @@
    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">
     <img src="https://github.com/devicons/devicon/blob/master/icons/javascript/javascript-original.svg" title="JavaScript" alt="JavaScript" width="40" height="40"/>&nbsp;
   </a>
+  <a href="https://habr.com/ru/articles/514838/">
+    <img src="https://github.com/devicons/devicon/blob/master/icons/webpack/webpack-original.svg" title="Webpack" alt="Webpack" width="40" height="40"/>&nbsp;
+  </a>
 </div>
 
-### :hammer_and_wrench: А так же: БЭМ, flex-box, адаптивная верстка, медиа-запросы css, grid, forms, modal window, валидация форм.
+### :hammer_and_wrench: А так же: БЭМ, flex-box, адаптивная верстка, медиа-запросы css, grid, forms, modal window, валидация форм, браузерное хранилище и концепции ООП.
+
+### :two_women_holding_hands: одна из задач проекта - получение опыта работы в команде, часть функционала реализована совместно со студеном Яндекс Практикум Yasmin Yurovskikh (https://github.com/YuYaDev) 
 
 <h3>Демонстрация проекта на GitHub Pages</h3>
 https://marinataras.github.io/mesto-project/
